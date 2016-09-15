@@ -8,48 +8,38 @@
  * global execution context.
  */
 
-function b() {
-  console.log(myVar);
-}
+(function () {
 
-function a() {
-  var myVar = 2;
-  b();
-}
+  function b() {
+    console.log(myVar);
+  }
 
-var myVar = 1;
-a(); // 1
+  function a() {
+    var myVar = 2;
+    b();
+  }
+
+  var myVar = 1;
+  a();
+
+})(); // 1
 
 /**
  * If b() was inside a(), b()'s outer environment reference is a()'s
  * execution context.
  */
 
-function a() {
-  function b() {
-    console.log(myVar);
+(function () {
+
+  function a() {
+    function b() {
+      console.log(myVar);
+    }
+    var myVar = 2;
+    b();
   }
-  var myVar = 2;
-  b();
-}
 
-var myVar = 1;
-a(); // 2
+  var myVar = 1;
+  a();
 
-/**
- * Aside - "this" keyword and the scope chain
- *
- * this.myVar will refer to the global execution context because
- * b() is a method of the window object
- */
-
-function a() {
-  function b() {
-    console.log(this.myVar);
-  }
-  var myVar = 2;
-  b();
-}
-
-var myVar = 1;
-a(); // 1
+})(); // 2
