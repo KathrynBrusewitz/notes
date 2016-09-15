@@ -1,4 +1,3 @@
-
 /**
  * Section 2 Lecture 16 - The Scope Chain
  * 
@@ -18,13 +17,8 @@ function a() {
   b();
 }
 
-// var myVar = 1;
-// a();
-
-/**
- * RESULT
- * 1
- */
+var myVar = 1;
+a(); // 1
 
 /**
  * If b() was inside a(), b()'s outer environment reference is a()'s
@@ -40,14 +34,9 @@ function a() {
 }
 
 var myVar = 1;
-a();
+a(); // 2
 
 /**
- * RESULT
- * 2
- */
-
- /**
  * Aside - "this" keyword and the scope chain
  *
  * this.myVar will refer to the global execution context because
@@ -63,9 +52,4 @@ function a() {
 }
 
 var myVar = 1;
-a();
-
-/**
- * RESULT
- * 1
- */
+a(); // 1
