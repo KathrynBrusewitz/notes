@@ -1,10 +1,4 @@
 cherries
 banana
-yellow
-ocean
 apple
-grass
 grapes
-table
-blue
-green
