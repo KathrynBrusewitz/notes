@@ -23,19 +23,13 @@ Staging Area
 ------------
 
     git add filename
-
-or
-
     git add .
 
 Committing Changes
 ------------------
 
-    git commit
-
-or
-
-    git commit -m "some message"
+    git commit 
+    git commit -m "Fix authorization bug"
 
 [General Guidelines](http://chris.beams.io/posts/git-commit/) by Chris Beams
 
@@ -57,3 +51,21 @@ Commit History
     git log [--oneline]
 
 This will give a list of the sequence of commits: who made what changes and when. HEAD refers to the most recent commit. The `--oneline` option gives a compact version. Each commit is identified by an SHA-1 hash.
+
+Branching
+---------
+
+List current branches: `git branch` or `git branch -a`
+
+Create local branch: `git branch [local_branch]`. This will be assigned the latest commit.
+
+Switch local branch: `git checkout [local_branch]`. This changes the HEAD to refer to the latest commit of the target branch.
+
+Create and switch local branch at once: `git checkout -b [local_branch]`
+
+Delete local branch: `git branch -d [local_branch]`
+
+Force delete without checking merged: `git branch -D [local_branch]`
+
+Delete remote branch: `git push origin --delete [remote_branch]`
+
