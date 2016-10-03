@@ -1,4 +1,7 @@
 cherries
 banana
+ocean
 apple
+grass
 grapes
+table
