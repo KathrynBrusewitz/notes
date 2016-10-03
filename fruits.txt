@@ -1,3 +1,6 @@
 banana
 apple
+lizards
 grapes
+dogs
+cats
