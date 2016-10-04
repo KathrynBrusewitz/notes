@@ -35,7 +35,7 @@ Committing Changes
 
 * Use the imperative mood in the subject line ("Add feature" not "added feature")
 
-* Limit the subject line to 50 characters. If you want more detail, do so after a blank line.
+* Limit the subject line to 50 characters. If you want more detail, do so after a blank line
 
 * Capitalize the subject line
 
@@ -55,17 +55,80 @@ This will give a list of the sequence of commits: who made what changes and when
 Branching
 ---------
 
-List current branches: `git branch` or `git branch -a`
+__List current branches__
+`git branch` or `git branch -a`
 
-Create local branch: `git branch [local_branch]`. This will be assigned the latest commit.
+__Create local branch__
+`git branch [local_branch]`
+_This will be assigned the latest commit._
 
-Switch local branch: `git checkout [local_branch]`. This changes the HEAD to refer to the latest commit of the target branch.
+__Switch local branch__ 
+`git checkout [local_branch]`
+_This changes the HEAD to refer to the latest commit of the target branch._
 
-Create and switch local branch at once: `git checkout -b [local_branch]`
+__Create and switch local branch at once__
+`git checkout -b [local_branch]`
 
-Delete local branch: `git branch -d [local_branch]`
+__Delete local branch__
+`git branch -d [local_branch]`
 
-Force delete without checking merged: `git branch -D [local_branch]`
+__Force delete without checking merged__
+`git branch -D [local_branch]`
 
-Delete remote branch: `git push origin --delete [remote_branch]`
+__Delete remote branch__
+`git push origin --delete [remote_branch]`
+
+Merging
+-------
+
+    git merge [other_branch] --no-edit
+
+This will merge `other_branch` into the current branch. `--no-edit` tells git to use the default commit message.
+
+`git rebase` is similar but does not create a new merge commit -- it simply attaches the commits to the other branch. Avoid rebasing because it makes branching history unclear.
+
+Merge Conflicts
+---------------
+
+1. Use `git status` to see which files have merge conflicts
+
+2. Choose/change code accordingly
+
+3. `git add` and `git commit --no-edit`
+
+Using Branches
+--------------
+
+* Industry commonly uses the [git flow model](http://nvie.com/posts/a-successful-git-branching-model/)
+
+* Use a separate branch for each feature
+
+* `master` branch always contains production-level code: valid, completely working code that could be deployed
+
+* Development occurs on _feature branches_ and is eventually merged back to `master`
+
+Undoing Changes
+---------------
+
+__Commit early, commit often__
+_Why? Git can only go back to changes that have been commited. If you don't commit, git can't help._
+
+__Find SHA-1 hash of commit__
+`git log --oneline`
+
+__Replace current `[filename]` with the version in `[commit_hash_number]`__
+`git checkout [commit_hash_number] [filename]`
+
+__Use `--` to refer to the HEAD (the most recent commit)__
+`git checkout -- [filename]`
+
+__Replace entire project directory__
+`git checkout -b [local_branch] [commit_hash_number]`
+_This will check out that commit as a new branch. You can make further changes and merge it back into your development branch._
+
+_If you don't create a new branch when checking out an old commit, you'll enter detached HEAD state. You can't commit from here, because there is no branch for that commit to be attached to.  Use `git checkout master` to get back to the last saved commit, though you will lose any changes made in that state._
+
+__Reverse changes from a commit__
+`git revert [commit_hash_number] --no-edit`
+_This creates a new commit and applies the opposite changes made by the given commit number. Do not use `reset`._
 
