@@ -150,3 +150,27 @@ __Reverse changes from a commit__
 
 _This creates a new commit and applies the opposite changes made by the given commit number. Do not use `reset`._
 
+Remotes, Pushing and Pulling
+----------------------------
+`origin` is the remote repo on GitHub's servers.
+
+__Create a new repo__ 
+
+    git clone [url]
+
+__Pushing to remote servers__
+
+    git push -u [remote] [branch]
+    git push -u origin master
+
+_Pushes the current branch to the `origin` remote's `master` branch. `-u` tracks the remote branch. This shows further information in `git status` and lets you use `git push` alone._
+
+__Import remote branches shown in `git branch -a`__
+
+    git fetch
+
+_This will download the commits for those branches, but are still listed as separate branches that need to be merged._
+
+__Pull from remote and merge into current branch__
+
+    git pull [remote] [branch]
