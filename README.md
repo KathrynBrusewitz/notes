@@ -56,27 +56,37 @@ Branching
 ---------
 
 __List current branches__
-`git branch` or `git branch -a`
+
+    git branch
+    git branch -a
 
 __Create local branch__
-`git branch [local_branch]`
+
+    git branch [local_branch]
+
 _This will be assigned the latest commit._
 
 __Switch local branch__ 
-`git checkout [local_branch]`
+
+    git checkout [local_branch]
+
 _This changes the HEAD to refer to the latest commit of the target branch._
 
 __Create and switch local branch at once__
-`git checkout -b [local_branch]`
+
+    git checkout -b [local_branch]
 
 __Delete local branch__
-`git branch -d [local_branch]`
+
+    git branch -d [local_branch]
 
 __Force delete without checking merged__
-`git branch -D [local_branch]`
+
+    git branch -D [local_branch]
 
 __Delete remote branch__
-`git push origin --delete [remote_branch]`
+
+    git push origin --delete [remote_branch]
 
 Merging
 -------
@@ -111,24 +121,32 @@ Undoing Changes
 ---------------
 
 __Commit early, commit often__
+
 _Why? Git can only go back to changes that have been commited. If you don't commit, git can't help._
 
 __Find SHA-1 hash of commit__
-`git log --oneline`
+
+    git log --oneline
 
 __Replace current `[filename]` with the version in `[commit_hash_number]`__
-`git checkout [commit_hash_number] [filename]`
+
+    git checkout [commit_hash_number] [filename]
 
 __Use `--` to refer to the HEAD (the most recent commit)__
-`git checkout -- [filename]`
+
+    git checkout -- [filename]
 
 __Replace entire project directory__
-`git checkout -b [local_branch] [commit_hash_number]`
+
+    git checkout -b [local_branch] [commit_hash_number]
+
 _This will check out that commit as a new branch. You can make further changes and merge it back into your development branch._
 
 _If you don't create a new branch when checking out an old commit, you'll enter detached HEAD state. You can't commit from here, because there is no branch for that commit to be attached to.  Use `git checkout master` to get back to the last saved commit, though you will lose any changes made in that state._
 
 __Reverse changes from a commit__
-`git revert [commit_hash_number] --no-edit`
+
+    git revert [commit_hash_number] --no-edit
+
 _This creates a new commit and applies the opposite changes made by the given commit number. Do not use `reset`._
 
