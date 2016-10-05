@@ -1,5 +1,5 @@
-Git Practice Notes
-==================
+Git Notes
+=========
 
 Installation Configuration
 --------------------------
@@ -22,8 +22,10 @@ Checking Current Repo State
 Staging Area
 ------------
 
-    git add filename
-    git add .
+    git add [filename]
+    git add .           # to add all
+    git add -A          # to include deleted files
+    git rm [filename]   # to include a delete file
 
 Committing Changes
 ------------------
@@ -174,3 +176,7 @@ _This will download the commits for those branches, but are still listed as sepa
 __Pull from remote and merge into current branch__
 
     git pull [remote] [branch]
+
+__Change the remote's URL__
+
+    git remote set-url [remote] [URL]
