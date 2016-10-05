@@ -1,3 +1,6 @@
+INFO 340 Relational Database Systems Notes
+==========================================
+
 Definitions
 -----------
 __System catalog__ (or __data dictionary__, or __metadata__) - Description of the data
@@ -18,13 +21,7 @@ __Degree__ - The number of attributes a relation contains.
 
 __Cardinality__ - The number of tuples a relation contains.
 
-[ERD Example 1]: /img/erd-example-1.png
-
-Example Entity–Relationship diagram: ![ERD Example 1](/images/erd-example-1.png "Example Entity–Relationship diagram")
-
-The relational data model requires only thtat the database be perceived by the user as tables. 
-
-Perceive the logical structure of relational databases as tables.
+![Example Entity–Relationship diagram](img/erd-example-1.png)
 
 | Formal terms | Alternative 1 | Alternative 2 |
 |--------------|---------------|---------------|
