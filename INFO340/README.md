@@ -58,20 +58,31 @@ alias is an optional abbreviation for TableName
 The sequence of processing in a SELECT statement is:
 
 FROM        specifies the table or tables to be used
+
 WHERE       filters the rows subject to some condition
+
 GROUP BY    forms groups of rows with the same column value
+
 HAVING      filters the groups subject to some condition
+
 SELECT      specifies which columns are to appear in the output
+
 ORDER BY    specifies the order of the output
 
 The order in the SELECT statement cannot be changed. The only two mandatory clauses are the first two: SELECT and FROM.
 
 Branch              (_branchNo_, street, city, postcode)
+
 Staff               (_staffNo_, fName, lName, position, sex, DOB, salary, branchNo)
+
 PropertyForRent     (_propertyNo_, street, city, postcode, type, rooms, rent, ownerNo, staffNo, branchNo)
+
 Client              (_clientNo_, fName, lName, telNo, prefType, maxRent)
+
 PrivateOwner        (_ownerNo_, fName, lName, address, telNo)
+
 Viewing             (_clientNo_, _propertyNo_, viewDate, comment)
+
 Registration        (_clientNo_, _branchNo_, staffNo, dateJoined)
 
 __Example 1.1 Retrieve all columns, all rows__
@@ -95,6 +106,7 @@ Could possibly show duplicates, as SELECT does not eliminate duplicates. To remo
     FROM Viewing
 
 __Example 1.4 Calculated fields__
+
 _Produce a list of monthly salaries for all staff_
 
     SELECT staffNo, fName, lName, salary/12
@@ -106,6 +118,7 @@ This results in an unnamed fourth column. To name it, use AS:
     FROM Staff
 
 __Example 1.5 Comparison search condition__
+
 _List all staff with a salary greater than $10,000_
 
     SELECT staffNo, fName, lName, position, salary
@@ -113,6 +126,7 @@ _List all staff with a salary greater than $10,000_
     WHERE salary > 10000
 
 __Example 1.6 Compound comparison search condition__
+
 _List the addresses of all branch offices in London or Glasgow_
 
     SELECT *
@@ -120,6 +134,7 @@ _List the addresses of all branch offices in London or Glasgow_
     WHERE city='London' OR city='Glasgow'
 
 __Example 1.7 Range search condition (BETWEEN/NOT BETWEEN)__
+
 _List all staff with a salary between $20,000 and $30,000_
 
     SELECT staffNo, fName, lName, position, salary
@@ -127,6 +142,7 @@ _List all staff with a salary between $20,000 and $30,000_
     WHERE salary BETWEEN 20000 AND 30000
 
 __Example 1.8 Set membership search condition (IN/NOT IN)__
+
 _List all managers and supervisors_
 
     SELECT staffNo, fName, lName, position
@@ -134,6 +150,7 @@ _List all managers and supervisors_
     WHERE position IN ('Manager', 'Supervisor')
 
 __Example 1.9 Pattern match search condition (LIKE/NOT LIKE)__
+
 _Find all owners with the string 'Glasgow' in their address_
 
 % character represents any sequence of zero or more characters (wildcard)
@@ -146,6 +163,7 @@ You can define the escape character:
     LIKE '15#%' ESCAPE '#'
 
 __Example 1.10 NULL search condition (IS NULL/IS NOT NULL)__
+
 _List the details of all viewings on property PG4 where a comment has not been supplied_
 
     SELECT clientNo, viewDate
@@ -153,6 +171,7 @@ _List the details of all viewings on property PG4 where a comment has not been s
     WHERE propertyNo = 'PG4' AND comment IS NULL
 
 __Example 1.11 Single-column ordering__
+
 _Order by salary in descending order_
 
     SELECT staffNo, fName, lName, salary
@@ -160,6 +179,7 @@ _Order by salary in descending order_
     ORDER BY salary DESC
 
 __Example 1.12 Multiple-column ordering__
+
 _Order by type in ascending order, then rent in descending order_
 
     SELECT propertyNo, type, rooms, rent
