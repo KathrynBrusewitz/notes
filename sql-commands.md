@@ -1,34 +1,3 @@
-INFO 340 Relational Database Systems Notes
-==========================================
-
-Definitions
------------
-__System catalog__ (or __data dictionary__, or __metadata__) - Description of the data
-
-__Data abstraction__ - Users of an object see only the external definition and are unaware of how the object is defined and how it functions.
-
-__Entity__ - A distinct object. In ERD, the object encapsulates both state and behavior
-
-__Attribute__ - A named column of a relation. A property that describes some aspect of the object (columns). Each tuple (row) contains one value per attribute.
-
-__Relationship__ - An association between entities. Each relation has a name and is made up of named attributes of data.
-
-__Relation__ - A 2-dimensional table with columns and rows. Elements of a relation are the tuples in the table.
-
-__Domain__ - The set of allowable values for one or more attributes.
-
-__Degree__ - The number of attributes a relation contains.
-
-__Cardinality__ - The number of tuples a relation contains.
-
-![Example Entity–Relationship diagram](img/erd-example-1.png)
-
-| Formal terms | Alternative 1 | Alternative 2 |
-|--------------|---------------|---------------|
-| Relation     | Table         | File          |
-| Tuple        | Row           | Record        |
-| Attribute    | Column        | Field         |
-
 SQL Commands
 ------------
 General Guidelines:
@@ -202,4 +171,3 @@ __Simple Table Query__
     FROM [Person].[Person] P
 
 _P is like a variable name for the table object_
-
