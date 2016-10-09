@@ -1,5 +1,10 @@
 /**
  * Section 4 Lecture 37 - Objects, Functions, and 'this'
+ *
+ * It's the global object when just invoking a function.
+ * When the function is a method of an object, it is the object.
+ * Internal functions have a problem (see below) e.g. throwing
+ * things onto the global object unintentionally.
  */
 
 /**
@@ -72,6 +77,8 @@ console.log(this); // Window Object
       };
 
       // doesn't update person object, but rather global object
+      // because when its execution context was created, the 'this'
+      // keyword points to the global object
       update();
       console.log(this.name); // still Kath
     }
@@ -82,8 +89,10 @@ console.log(this); // Window Object
 })();
 
 /**
- * Workaround for above quirk...
- * Save the person object into variable 'self'
+ * Very common orkaround for above quirk...
+ * Save the person object into variable 'self' [by reference]
+ *
+ * The 'let' keyword also solves this problem.
  */
 
 (function () {
