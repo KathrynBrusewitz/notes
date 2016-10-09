@@ -7,11 +7,11 @@ __Entity__
 
 __Relation__ - A table. Tables not relations are:
 	
-	- Multi-valued attributes - if needed, this means a new entity for that attribute should be created
+- Multi-valued attributes - if needed, this means a new entity for that attribute should be created
 
-	- Required order of rows, which would also mean missing primary keys
+- Required order of rows, which would also mean missing primary keys
 
-	- Values of varying length - e.g. comments. Better to create a new entity for comments
+- Values of varying length - e.g. comments. Better to create a new entity for comments
 
 __Attribute__ - A named column of a relation
 
