@@ -18,6 +18,8 @@ INFO 340 Relational Database Management Systems
 
 INFO 200 Intellectual Foundations Of Informatics
 ------------------------------------------------
+[Response to Information as Thing](response-to-information-as-thing.md)
+
 [Response to Design Thinking](response-to-design-thinking.md)
 
 [Response to User Research](response-to-user-research.md)
