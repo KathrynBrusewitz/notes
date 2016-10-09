@@ -6,8 +6,8 @@ INFO 343 Client-Side Web Development
 ------------------------------------
 [Git Cheatsheet](git-cheatsheet.md)
 
-INFO 340 Relational Database Systems
--------------------------------------
+INFO 340 Relational Database Management Systems
+-----------------------------------------------
 [Database Terms](database-terms.md)
 
 [Conceptual Design Example 1](conceptual-design-example-1.md)
@@ -15,6 +15,13 @@ INFO 340 Relational Database Systems
 [Normalization](normalization.md)
 
 [SQL Commands](sql-commands.md)
+
+INFO 200 Intellectual Foundations Of Informatics
+------------------------------------------------
+[Response to Design Thinking](response-to-design-thinking.md)
+
+[Response to User Research](response-to-user-research.md)
+
 
 Events
 ------
