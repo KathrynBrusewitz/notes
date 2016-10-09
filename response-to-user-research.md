@@ -1,6 +1,9 @@
 Kathryn Brusewitz
+
 INFO 200 BC
+
 Dr. David Stearns
+
 11 October 2016
 
 Response to User Research
