@@ -1,10 +1,7 @@
-Kathryn Brusewitz
-
-INFO 200 BC
-
-Dr. David Stearns
-
-6 October 2016
+Kathryn Brusewitz  
+INFO 200 BC  
+Dr. David Stearns  
+6 October 2016  
 
 Response to Design Thinking
 ===========================
