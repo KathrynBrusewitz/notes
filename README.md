@@ -24,6 +24,8 @@ INFO 200 Intellectual Foundations Of Informatics
 
 [Response to User Research](response-to-user-research.md)
 
+[Response to Software UI Design](response-to-ui-design.md)
+
 
 Events
 ------
