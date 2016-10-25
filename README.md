@@ -28,6 +28,8 @@ INFO 200 Intellectual Foundations Of Informatics
 
 [Response to UX and Interaction Design](response-to-ux-and-interaction-design.md)
 
+[Response to Security](response-to-security.md)
+
 
 Events
 ------
