@@ -1,5 +1,3 @@
-info200-classnotes-3.md
-
 Nov 9 - [Quiz 3](https://canvas.uw.edu/courses/1066596/quizzes/915789)
 
 User Research this weekend, then prototyping (using prototyping/appsketching tools) next week (nov 1 - nov 5)  

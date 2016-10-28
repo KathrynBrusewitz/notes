@@ -30,11 +30,11 @@ INFO 200 Intellectual Foundations Of Informatics
 
 [Response to Security](response-to-security.md)
 
-[Classnotes/Quiz 1](info200-classnotes-1.md)
+[Classnotes 1](info200-classnotes-1.md)
 
-[Classnotes/Quiz 2](info200-classnotes-2.md)
+[Classnotes 2](info200-classnotes-2.md)
 
-[Classnotes/Quiz 13](info200-classnotes-3.md)
+[Classnotes 3](info200-classnotes-3.md)
 
 
 Events
