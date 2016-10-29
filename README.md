@@ -30,6 +30,8 @@ INFO 200 Intellectual Foundations Of Informatics
 
 [Response to Security](response-to-security.md)
 
+[Response to Information Architecture](response-to-information-architecture.md)
+
 [Classnotes 1](info200-classnotes-1.md)
 
 [Classnotes 2](info200-classnotes-2.md)
