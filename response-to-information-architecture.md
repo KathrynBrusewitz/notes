@@ -1,0 +1,28 @@
+Kathryn Brusewitz  
+INFO 200 BC  
+Dr. David Stearns  
+3 November 2016  
+
+Response to _Information Architecture_
+======================================
+_According to Morville and Rosenfeld, what are the basic schemes one can use to organize information? As you describe each scheme, also describe what kind of information the scheme is best suited for._
+
+Information is organized by an organization scheme, which defines and logically groups shared characteristics of content. Generally, there are two major schemes: exact (objective) and ambiguous (subjective). These can be further broken down by the type of content the information holds and general structure that helps meet the primary needs of the user searching through and navigating the information.
+
+Exact organization schemes "divide information into well-defined and mutually exclusive sections" (Morvill, 59). They require users to know specifically what they are looking for, such as a name, a date, or a location, so that it is obvious where to find it relative to all other names, dates, or locations. Information that can be alphabetically organized (such as encyclopedias or dictionaries), chronologically organized (such as history books and diaries), or geographically organized (such as weather and political/social/economic issues for a given region). Exact organization schemes are easy to design, maintain, and use, as it is easy to divide content into objective categories where there can be no ambiguity.
+
+Ambiguous organization schemes divide information based on human subjectivity and the ambiguity of language (Morvill, 61). Though difficult to define and maintain, they can be more useful than exact organization schemes. Often, users do not always know what they are looking for, but they may broadly know the general subject they are interested searching within. It is up to the designer to perform rigorous user testing, classifying new items and modifying the organization to reflect changes in the subject area or, more broadly, the industry. If done to the best of their knowledge and ability, the user can serendipitously search for information as the information they are seeking in a broad sense allows them to venture from one item content to another, without losing too much focus and the primary need of the user. In this way, ambiguous organization can be useful for finding information that one didn't know they needed, or inspiring new search inquiries and ideas. 
+
+Depending on the nature of content and the users' needs, information can be subjectively organized by topic, task, and audience. Research-oriented sites that review a variety of products and services will find that organizing their information by topic will be most effective, as people who browse these have a general idea of the kind of product they would like to read about, but not an exact model or even brand. Software applications and tools would benefit from following a task oriented organization, as their users would use most often, for example, `edit`, `add`, and `delete`. Sites that cater to more than one type of user, such as a computer hardware manufacturer, could organize their information and products by audience, as their users are most likely to be either professional users, home users, students, and gamers. Each of these types of users have different needs and wants, so offering separate and focused information to each type can help them quickly find information most useful to them.
+
+_Why did Netflix develop their microgenre feature, and how did they categorize their movies? Why didn't they just let end-users tag movies like Flickr or YouTube allow?_
+
+Netflix developed their microgenre feature as part of their primary goal: to gain and retain subscribers. The multitudes of genres available allow subscribers to get tailored genre rows placed higher on the page for them, which was measured and found to be integral in member retention. The better Netflix caters to your tastes, the likelier you stay with the service. To illustrate why Netflix didn't just let end-users tag movies, Madrigal went to Twitter and asked his followers for genre categories. He came up with 150 genres. This pales in comparison to Netflix's 76,897 unique ways to describe movies.
+
+They paid large teams of people to watch films and tag them a variety of metadata, which required a 36-page training document teaching them how to rate movies based on a multitude of details and content type, such as romance levels, goriness, moral status of characters, narrative elements, and sexually suggestive content. This built up into a defined vocabulary for movies and developed into an algorithm. A genre is formed out of the following components: `Region + Adjectives + Noun Genre + Based On... + Set In... + From the... + About... + For Age X to Y`. Some values are scalar, such as the romantic rating of every movie, which can go from 1 to 5. Every component of the movie is tagged, from the plot to movie locations. The algorithm is only limited by UI design principles, such as limiting the genres to under 50 characters, having a critical mass of content that fit the genre, and only having genres that made syntactic sense.
+
+References
+----------
+Morvill, P., and Rosenfeld, L. (2007). _Information Architecture for the World Wide Web_. [PDF]. Retrieved from https://faculty.washington.edu/dlsinfo/info200/readings/ia-05.pdf
+
+Madrigal, A.C. (2014, Jan 2). _How Netflix Reverse Engineered Hollywood_. [Website]. Retrieved from http://www.theatlantic.com/technology/archive/2014/01/how-netflix-reverse-engineered-hollywood/282679/
