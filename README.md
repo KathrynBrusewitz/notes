@@ -8,6 +8,8 @@ INFO 343 Client-Side Web Development
 
 INFO 340 Relational Database Management Systems
 -----------------------------------------------
+[Quiz Questions and Answers](info340-quizzes.md)
+
 [Database Terms](database-terms.md)
 
 [Conceptual Design Example 1](conceptual-design-example-1.md)
