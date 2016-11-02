@@ -59,3 +59,36 @@ TLS - transport layer security
 digital cert: has public key  
 asymmetric used to encrypt seed, in order to share a symmetric key (seed value is what generates the symmetric key)  
 then can deliver symmetrically-encrypted data back and forth (saves on time)
+
+Nov 1 - Data Modeling and Encoding
+==================================
+Accounting Tokens and Envelopes (Encoding/Decoding) <--> Analogous to digital signatures
+
+Early 19th century had punchcards; used for surveys/census
+
+__Character Sets__ defined mapping between patterns of bit and characters. Multiple character sets cause serious problems, if we don't know what character set was used to represent the data
+
+__ASCII__ - English  
+__Unicode__ - Universal, 16 bits per-character = 65,536 possible code points  
+__Multiplane Unicode__ - 32 bits per-character = 4.2 billion possible code points: _UTF-32_ (UNIX), _UTF-16_ (Java, .Net), _UTF-8_ (web, Go)  
+Higher numbered characters have different bit sequences depending on the character set used.
+
+__Raster Image Encoding__ - 3 numbers per pixel, each 0-255, 24 bits per pixel, e.g. `Red: 233`, `Green: 157`, `Blue: 144`
+
+Databases and Data Modeling
+---------------------------
+Data modeling is about modeling the salient characteristics of that object.  
+Want to maintain integrity, and control and authorize accessibility.  
+
+__Database Management System (DBMS)__ - A software process that allows clients to define a data structure; add data to that structure; navigate, tabulate, update, and delete those data; maintain data security and integrity; and automatically recover from failure.
+
+_Relational (SQL)_ - Tables  
+_No-SQL Distributed_ - Complex documents, invented specifically for social media, not good with sets of data, good with singular items, data spread over different machines, can store tons of information  
+_Multidimensional_ - Microsoft pivot tables, hypercube matrix of data  
+_Network_  
+_Hierarchical_ - Strict hierarchical; parent/child relationships, file system on computer  
+_Simple Tables_ - Excel, singular tables of data, duplicated data  
+
+__Schema__ - structure for holding data, accounts for attributes  
+__Data Modeling__ - the process of designing a structure capable of holding the data the system needs to track, while avoiding redundancy and ensuring data integrity; resulting structure is called a schema. Visually designed and represented in an Entity-Relationship Diagram (ERD)  
+__Entity__ - a person place, thing, or concept tracked by the system
