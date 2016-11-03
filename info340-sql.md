@@ -1,6 +1,5 @@
-BASICS
+Basics
 ===
-
     SELECT column, another_column, …
     FROM mytable
     WHERE condition(s)
@@ -37,12 +36,6 @@ Limiting results to a subset
 
 `OFFSET`
 : Specify where to begin counting the number rows from
-
-    SELECT column, another_column, …
-    FROM mytable
-    WHERE condition(s)
-    ORDER BY column ASC/DESC
-    LIMIT num_limit OFFSET num_offset
 
 Removing Duplicates
 ---
