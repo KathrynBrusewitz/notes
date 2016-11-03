@@ -1,8 +1,14 @@
-`WHERE` Clause Operators
-========================
+BASICS
+===
 
-Numbers
--------
+    SELECT column, another_column, …
+    FROM mytable
+    WHERE condition(s)
+    ORDER BY column ASC/DESC
+    LIMIT num_limit OFFSET num_offset;
+
+Number Operators
+---
 | Operator | Condition |
 | --- | --- |
 | `=`, `!=`, `<`, `<=`, `>`, `>=` | Standard numerical operators |
@@ -11,8 +17,8 @@ Numbers
 | `IN (…)` | Number exists in a list |
 | `NOT IN (…)` | Number does not exist in a list |
 
-Strings
--------
+String Operators
+---
 | Operator | Condition |
 | --- | --- |
 | `=` | Case sensitive exact string comparison |
@@ -24,9 +30,22 @@ Strings
 | `IN (...)` |  String exists in a list |
 | `NOT IN (...)` |  String does not exist in a list |
 
-`DISTINCT`
-==========
+Limiting results to a subset
+---
+`LIMIT`
+:  Reduce the number of rows to return
 
+`OFFSET`
+: Specify where to begin counting the number rows from
+
+    SELECT column, another_column, …
+    FROM mytable
+    WHERE condition(s)
+    ORDER BY column ASC/DESC
+    LIMIT num_limit OFFSET num_offset
+
+Removing Duplicates
+---
 `DISTINCT`
 :  Discard rows that have a duplicate column value
 
@@ -35,10 +54,3 @@ Strings
     WHERE condition(s)
 
 Since the `DISTINCT` keyword will blindly remove duplicate rows, you can discard duplicates based on specific columns using grouping and the `GROUP BY` clause.
-
-`ORDER BY`
-==========
-    SELECT column, another_column, …
-    FROM mytable
-    WHERE condition(s)
-    ORDER BY column ASC/DESC
