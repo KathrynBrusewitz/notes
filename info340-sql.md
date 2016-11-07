@@ -55,7 +55,7 @@ Since the `DISTINCT` keyword will blindly remove duplicate rows, you can discard
 Multi-Table Queries
 ===
 `INNER JOIN`
-:  Match rows from the first table and the second table which have the same key (as defined by the ON constraint) to create a result row with the combined columns from both tables. Can be written simply as `JOIN`. These two are equivalent, but use `INNER JOIN` because they make the query easier to read once you start using other types of joins
+:  Match rows from the first table and the second table which have the same key (as defined by the ON constraint) to create a result row with the combined columns from both tables. Can be written simply as `JOIN`. These two are equivalent, but use `INNER JOIN` because they make the query easier to read once you start using other types of joins. `INNER JOIN` results in a table that only contains data that belongs in both of the tables.
 
 ```sql
 SELECT column, another_table_column, …
