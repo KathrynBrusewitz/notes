@@ -34,6 +34,8 @@ INFO 200 Intellectual Foundations Of Informatics
 
 [Response to Information Architecture](response-to-information-architecture.md)
 
+[Response to Data Science](response-to-data-science.md)
+
 [Classnotes 1](info200-classnotes-1.md)
 
 [Classnotes 2](info200-classnotes-2.md)
