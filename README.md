@@ -10,13 +10,9 @@ INFO 340 Relational Database Management Systems
 -----------------------------------------------
 [Quiz Questions and Answers](info340-quizzes.md)
 
-[Database Terms](database-terms.md)
+[Class Notes](info340-classnotes.md)
 
-[Conceptual Design Example 1](conceptual-design-example-1.md)
-
-[Normalization](normalization.md)
-
-[SQL Commands](sql-commands.md)
+[SQL Notes](info340-sql.md.md)
 
 INFO 200 Intellectual Foundations Of Informatics
 ------------------------------------------------
@@ -42,11 +38,15 @@ INFO 200 Intellectual Foundations Of Informatics
 
 [Classnotes 3](info200-classnotes-3.md)
 
+[Classnotes 4](info200-classnotes-4.md)
+
+Other Notes
+-----------
+[Data Structures and Algorithms](algorithm-notes.md)
+
 
 Events
 ------
-Because I don't have facebook and there are way too emails sent to me about internships and events and job fairs and aslkdfjsldkl... Just need to put it all in one place:
-
 [iSchool Events](https://ischool.uw.edu/events)
 
 [Informatics Facebook Page](https://www.facebook.com/login/?next=https%3A%2F%2Fwww.facebook.com%2Fgroups%2Finfo.uw%2F)
