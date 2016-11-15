@@ -171,3 +171,56 @@ Disambiguation List
 	pitch (frequency)
 	pitch (angle)
 	pitch (distance)
+
+Nov 8 - Introduction to Data Science
+====================================
+Next week: Discuss "Right to be Forgotten" - Should U.S. consider adopting this policy?
+
+![Drew Conway's Data Science Venn Diagram](http://bit.ly/2eSUY4L)
+
+Data Science Workflow
+1. Preparing to run a model - Gathering, cleaning, integrating, restructuring, combining, etc.
+2. Running the Model
+3. Interpreting the results
+
+Data Management
+- Relational Algebra
+- Scheme-Later and NoSQL
+Stats
+- Permutation Methods
+- Multiple Hypothesis 
+Communication
+- Visualization
+- Data Privacy and Ethics
+
+Responsibility, Ethics
+----------------------
+Properties of "Weapons of Math Destruction":
+- Opacity
+- Scale
+- Damage
+
+What can we do with massive, noisy, heterogeneous datasets?  
+What should we do with massive, noisy, heterogeneous datasets?  
+Decisions are based on two sources of information:
+1. Past examples
+2. Societal constraints
+
+How do we apply societal constraints to algorithmic decision-making?  
+Option 1: Keep a human in the loop  
+Option 2: Build them into the algorithms themselves
+
+On transparency vs. accountability: As we shift decisions to algorithms, we lose both transparency and accountability.
+
+Privacy, Fairness, Transparency, Reproducibility, Ethics
+
+Fairness
+--------
+Any background signal in the data of institutional racism is amplified and reinforced by the algorithm
+
+Knack
+-----
+- Not very transparent. How did Knack come to the conclusions that they did? 
+- Does not consider soft skills; can only measure attention to the game. How is that a useful measurement for real-life and real skills?
+
+
