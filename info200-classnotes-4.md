@@ -32,3 +32,47 @@ Designing a Data Visualization
 2. Which data on which dimensions (x, y, z, time) and what kind of scale (linear, log, exponential)?  
 3. Which data for each data point, and which visual encodings (shape, color, orientation, size, etc.)  
 4. What labels, legends, annotations are needed?  
+
+Nov 17 - Intellectual Property
+===
+Loackean/Economic
+: ??
+
+Moral/Personal
+: We want those who create new or innovative things to be able to control how their work is used and displayed
+
+Utilitarian
+: We want those who create new or innovative things to share their creations so that everyone can benefit from them in the long-run (US)
+
+Copyrights
+---
+Protect various expressions, not ideas: literary, musical, dramatic, choreographic, pictorial, graphical, sculptural, audiovisual, film, architectural, & computer software (but not fashion)  
+As long as the expression is different, copyright is protected.  
+Grant five exclusive rights: reproduce, adapt, distribute, display, perform  
+Are subject to certain restrictions: limited duration, first sale, fair use  
+
+work for hire is now protected for 120 years from creation or 95 years from first publication, whichever ends first
+
+[... look at slides ...]
+
+Patents
+---
+
+
+Trademarks
+---
+
+Trademarks
+---
+
+
+
+
+
+
+
+
+
+
+
+
