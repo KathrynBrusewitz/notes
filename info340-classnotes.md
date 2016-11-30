@@ -180,3 +180,22 @@ SET @RET=1
 RETURN @RET
 END
 ```
+
+Data Warehousing Concepts
+===
+
+
+Data Warehouse Design
+===
+
+
+Monitoring & Tuning
+===
+
+
+Security and Administration
+===
+
+
+Professional, Legal and Ethical Issues
+===
