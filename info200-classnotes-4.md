@@ -75,6 +75,10 @@ Against:
 - Will be abused by those with money and power
 - Google has an incentive to approve all requests
 
+HIPAA
+---
+HIPAA is the federal Health Insurance Portability and Accountability Act of 1996. The primary goal of the law is to make it easier for people to __keep health insurance__, protect the __confidentiality and security__ of healthcare information and help the healthcare industry __control administrative costs__.
+
 Nov 17 - Intellectual Property
 ===
 Common Justifications for IP Rights
@@ -90,61 +94,62 @@ Utilitarian
 
 Copyrights
 ---
-Protect various expressions, not ideas
+Protect various __expressions__, not ideas
 : literary, musical, dramatic, choreographic, pictorial, graphical, sculptural, audiovisual, film, architectural, & computer software (but not fashion!)
 
 Grant five exclusive rights
-: reproduce, adapt, distribute, display, perform
+: __reproduce, adapt, distribute, display, perform__
 
 Are subject to certain restrictions
-: limited duration; first sale; fair use
+: __limited duration; first sale; fair use__
 
 As long as the expression is different, copyright is protected.  
 
 Utility & Plant Patents
 ---
-Protect useful and novel ideas, processes, or plants
+Protect useful and novel __ideas, processes, or plants__
 : must be usable, novel, and non-obvious
 
 Grant four exclusive rights
-: make, use, sell, authorize others to sell
+: __make, use, sell, authorize others to sell__
+
 Are subject to certain restrictions
-: public disclosure; limited duration (20 years)
+: __public disclosure; limited duration (20 years)__
 
 Patents may be denied or revoked by demonstrating the existence of “prior art”
 
 Design Patents
 ---
-Protect new ornamental designs of functional objects
+Protect new __ornamental designs__ of functional objects
 : must be novel & not contribute to function
 
 Grant four exclusive rights
-: make, use, sell, authorize others to sell
+: __make, use, sell, authorize others to sell__
 
 Are subject to certain restrictions
-: public disclosure; limited duration (14 years) 
+: __public disclosure; limited duration (14 years)__
 
 Trademarks
 ---
-Protect unique marks associated with particular goods
+Protect unique __marks__ associated with particular goods
 : intent is to protect consumers from knock-offs
 
-Grant the exclusive right to use the marks
+Grant the __exclusive right to use the marks__
 : can sue anyone attaching marks to another product
 
 Are subject to certain restrictions
-: must be actively protected and cannot become generic (e.g., Aspirin, Escalator, Cellophane, Dry Ice, Flip Phone, Heroin, Linoleum, Thermos, Videotape)
+: must be actively protected and __cannot become generic__ (e.g., Aspirin, Escalator, Cellophane, Dry Ice, Flip Phone, Heroin, Linoleum, Thermos, Videotape)
 
 Trade Secrets
 ---
-Protect secrets that give a competitive advantage
+__Protect secrets__ that give a competitive advantage
 : can be anything not widely known outside the company
 
-Companies retain the right to make use of the secret
+Companies retain the __right to make use of the secret__
 : not actually granted by the government; that would require disclosure, which kind of defeats the purpose
 
 Are subject to certain restrictions
-: once the secret is widely known, it’s no longer a secret... but a corporation can still sue the leaker for damages
+: once the secret is widely known, it’s no longer a secret... but a corporation __can still sue the leaker__ for damages
 
 Public Domain
 ---
@@ -152,6 +157,12 @@ That which is not protected by copyright, patent, trademark, or trade secret, an
 without restrictions
 
 For Quiz, know: Protections, Rights, and Restrictions for Copyrights, Patents, Trademarks, and Trade Secrets
+
+GPL
+---
+GNU General Public License is a free software license, which guarantees end users the __freedom to run, study, share and modify the software.__
+
+If you release the modified version to the public in some way, GPL __requires__ you to make the modified source code __available__ to the program's users, under the GPL.
 
 Nov 22 - Digital Money
 ===
