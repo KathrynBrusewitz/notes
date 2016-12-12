@@ -1,3 +1,6 @@
+Part A
+===
+
 10 questions drawn from the following:
 
 __1. Describe the components of the N-Tier application architecture.__
@@ -374,3 +377,61 @@ OLAP:
 - Aggregated, historical data stored in a multi-dimensional schema (usually star schema)
 
 
+Part B
+===
+
+Create the SQL queries based on the following questions and ERD:
+
+![Final ERD](img/final-erd.png)
+
+
+__1. Write the code to CREATE a stored procedure with the following:__  
+
+- Takes in 6 parameters (FirstName, LastName, IncidentName, IncidentTypeName, IncidentDate, IncidentDescr)
+- Inserts a new row into INCIDENT and INCIDENT_ CONTACT in a single explicit transaction
+
+
+```sql
+-- to be filled out
+```
+
+
+__2. Write the code to create a new entity called SCHOOL_TYPE:__  
+
+- Include auto-increment feature
+- Include code to establish a foreign key to SCHOOL
+
+
+
+```sql
+-- to be filled out
+```
+
+
+
+__3. Write the code to create a computed column in SCHOOL that has the following:__  
+
+- Includes the use of a user-defined function
+- Tracks number of ‘student incidents’ (number of incidents that have involved students from each particular school) 
+
+
+```sql
+-- to be filled out
+```
+
+
+
+__4. Write the code to create a business rule that restricts a person from serving more than two terms on the Board of Directors in the title of ‘President’:__  
+
+```sql
+-- to be filled out
+```
+
+
+
+__5. Write the code to create a business rule that restricts a fundraising events to December or January only:__  
+
+
+```sql
+-- to be filled out
+```
