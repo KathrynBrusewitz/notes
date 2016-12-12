@@ -392,9 +392,40 @@ __1. Write the code to CREATE a stored procedure with the following:__
 
 
 ```sql
--- to be filled out
-```
+CREATE PROCEDURE uspNewIncident
+@FirstName VARCHAR (30)
+@LastName VARCHAR (30)
+@IncidentName VARCHAR (30)
+@IncidentTypeName VARCHAR (20)
+@IncidentDate DATE
+@IncidentDescr VARCHAR (500)
 
+-- Declare and initiate IDs for transaction(s)
+AS
+DECLARE @IncidentID INT
+DECLARE @ContactID INT
+DECLARE @IncidentTypeID INT
+
+SET @IncidentID = (SELECT IncidentID FROM INCIDENT WHERE IncidentName = @IncidentName AND IncidentDescr = @IncidentDescr AND IncidentDate = @IncidentDate)
+SET @ContactID = (SELECT ContactID FROM CONTACT WHERE FirstName = @FirstName AND LastName = @LastName)
+SET @IncidentTypeID = (SELECT IncidentTypeID FROM INCIDENT_TYPE WHERE IncidentTypeName = @IncidentTypeName)
+
+BEGIN Transaction
+  -- Insert a new row into INCIDENT 
+  INSERT INTO INCIDENT (IncidentName, IncidentDate, IncidentTypeID, IncidentDescr)
+  VALUES (@IncidentName, @IncidentDate, @IncidentTypeID, @IncidentDescr)
+
+  SET @IncidentID = (SELECT SCOPE_IDENTITY())
+
+  -- Insert a new row into INCIDENT_CONTACT
+  INSERT INTO INCIDENT_CONTACT (IncidentID, ContactID)
+  VALUES (@IncidentID, @ContactID)
+
+IF @@ERROR <> 0
+  ROLLBACK Transaction
+ELSE
+  COMMIT Transaction
+```
 
 __2. Write the code to create a new entity called SCHOOL_TYPE:__  
 
