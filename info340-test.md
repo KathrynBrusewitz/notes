@@ -206,13 +206,19 @@ Paper-based systems. They were quick to establish, easy to use, and cheap. Disad
 __14. Explain what is meant by cardinality, degree, multiplicity and participation.__
 
 
-Cardinality is the number of occurrences of one entity when involved with the relationship of another. Either one-to-one, many-to-many, or one-to-many.
+Cardinality is the number of occurrences of one entity when involved with the relationship of another. A cardinality is how many elements are in a set.
 
-One-to-One: A person has only one driver license, and a driver license belongs to only one person.
+A multiplicity is made up of a lower and an upper cardinality. A multiplicity tells you the minimum and maximum allowed members of the set.
 
-One-to-Many: A car can only have one registered owner, but an owner can have many registered cars.
+Degree: In every relationship how many entities are participating.
 
-Many-to-Many: A film can have many actors, and an actor can be in many films.
+Participation - Two types: total and partial. 
+
+Total Participation: The participation of entity set E in a relationship set R is total if every entity in E participates in at least one relationship in R. 
+
+Partial Participation: If only some entities in E participate in relationships in R, the participation of entity set E in relationship R is said to be partial.
+
+
 
 
 __15. Describe how entity integrity and referential integrity are enforced.__
