@@ -290,6 +290,8 @@ Subqueries can be used to return either a scalar (single) value or a row set.
 
 Joins are used to return rows.
 
+Joins are advantageous over subqueries if the SELECT list in a query contains columns from more than one table. 
+
 
 __19. Explain what is meant by 'write-ahead logging'. Which ACID principle is it enforcing?__
 
