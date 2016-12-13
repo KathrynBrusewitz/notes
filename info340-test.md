@@ -478,7 +478,7 @@ AS (dbo.fnTotalStudentIncidents(SchoolName))
 __4. Write the code to create a business rule that restricts a person from serving more than two terms on the Board of Directors in the title of ‘President’:__  
 
 ```sql
-CREATE FUNCTION ckPresHasLessThanThreeTerms(@FirstName VARCHAR (30), @LastName VARCHAR (30))
+CREATE FUNCTION ckPresHasLessThanThreeTerms()
 RETURNS INT
 AS
 BEGIN
@@ -492,17 +492,15 @@ IF EXISTS (
   JOIN BOARD_POSITION BP ON CBP.BoardPositionID = BP.BoardPositionID
   WHERE BP.BoardPositionName LIKE '%President%'
   AND DATEDIFF(year , CBP.BeginDate , CBP.EndDate) > 2
-  AND C.FirstName = @FirstName
-  AND C.LastName = @LastName
 )
 
 SET @RET = 1
 RETURN @RET
 END
 
-ALTER TABLE BOARD_POSITION
+ALTER TABLE CONTACT
 ADD CONSTRAINT ckPresHasLessThanThreeTerms
-CHECK (ckPresHasLessThanThreeTerms(FirstName, LastName) = 0)
+CHECK (dbo.ckPresHasLessThanThreeTerms(Person) = 0)
 ```
 
 
@@ -511,5 +509,25 @@ __5. Write the code to create a business rule that restricts a fundraising event
 
 
 ```sql
--- to be filled out
+CREATE FUNCTION ckFundraisingOnlyInDecemberJanuary()
+RETURNS INT
+AS
+BEGIN
+DECLARE @RET INT = 0
+IF EXISTS (
+  SELECT *
+  FROM EVENT E 
+  JOIN EVENT_TYPE ET ON E.EventTypeID = ET.EventTypeID
+  WHERE ET.EventTypeName LIKE '%fundrais%'
+  AND DATEPART(mm, E.EventDate) NOT LIKE '1'
+  AND DATEPART(mm, E.EventDate) NOT LIKE '12'
+)
+
+SET @RET = 1
+RETURN @RET
+END
+
+ALTER TABLE EVENT
+ADD CONSTRAINT ckFundraisingOnlyInDecemberJanuary
+CHECK (dbo.ckFundraisingOnlyInDecemberJanuary() = 0)
 ```
