@@ -114,13 +114,11 @@ Why:
 __7. Explain the difference between an implicit and explicit transaction and provide examples.__
 
 
-In Explicit transaction mode, you will need to start a transaction explicitly. In Implicit transaction mode, a transaction is automatically started after each commit. So you will only have to commit.
+Implicit Transaction: the next DML command you send starts a new transaction. Those changes are pending until you either COMMIT or ROLLBACK. If you disconnect without sending COMMIT, it automatically rolls back.
 
+Explicit Transaction has the beginning, ending and rollback of transactions with the command Begin Transaction, Commit Transaction and Rollback Transaction.
 
-Since the transaction is started 'implicitly', you will not see an explicit 'BEGIN' in the logs.
-
-
-By default the database operates in explicit transaction mode with auto-committing transactions enabled. That actually means that unless an explicit transaction is started using BEGIN TRANSACTION, every data modification is started in a separate transaction which is committed after the statement. That allows the database to rollback an entire statement when it fails (for instance a bulk insert, or an insert that modifies other data in a trigger).
+In the explicit transaction, if an error occurs in between we can rollback to the beginning of the transaction which cannot be done in implicit transaction.
 
 
 __8. Discuss the advantages of introducing SuperType/SubTypes into an ERD and provide examples.__
