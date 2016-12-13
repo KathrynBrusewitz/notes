@@ -406,7 +406,6 @@ DECLARE @IncidentID INT
 DECLARE @ContactID INT
 DECLARE @IncidentTypeID INT
 
-SET @IncidentID = (SELECT IncidentID FROM INCIDENT WHERE IncidentName = @IncidentName AND IncidentDescr = @IncidentDescr AND IncidentDate = @IncidentDate)
 SET @ContactID = (SELECT ContactID FROM CONTACT WHERE FirstName = @FirstName AND LastName = @LastName)
 SET @IncidentTypeID = (SELECT IncidentTypeID FROM INCIDENT_TYPE WHERE IncidentTypeName = @IncidentTypeName)
 
@@ -432,10 +431,14 @@ __2. Write the code to create a new entity called SCHOOL_TYPE:__
 - Include auto-increment feature
 - Include code to establish a foreign key to SCHOOL
 
-
-
 ```sql
--- to be filled out
+CREATE TABLE SCHOOL_TYPE
+(
+  SchoolTypeID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+  SchoolTypeName VARCHAR (40) NULL,
+  SchoolTypeDescr VARCHAR (500) NULL,
+  FOREIGN KEY (SchoolID) REFERENCES SCHOOL(SchoolID)
+)
 ```
 
 
@@ -447,7 +450,27 @@ __3. Write the code to create a computed column in SCHOOL that has the following
 
 
 ```sql
--- to be filled out
+CREATE FUNCTION fnTotalStudentIncidents(@School VARCHAR (40))
+RETURNS INT
+AS
+BEGIN
+DECLARE @numOfIncidents INT
+
+SELECT @numOfIncidents = COUNT(I.IncidentID)
+FROM INCIDENT I
+JOIN INCIDENT_CONTACT IC ON I.IncidentID = IC.IncidentID
+JOIN CONTACT C ON IC.ContactID = C.ContactID
+JOIN STUDENT S ON C.ContactID = S.ContactID
+JOIN CONTACT_SCHOOL CS ON C.ContactID = CS.ContactID
+JOIN SCHOOL SC ON CS.SchoolID = SC.SchoolID
+WHERE SC.SchoolName = @School
+
+RETURN @numOfIncidents
+END
+
+ALTER TABLE SCHOOL
+ADD TotalStudentIncidents INT 
+AS (dbo.fnTotalStudentIncidents(SchoolName))
 ```
 
 
@@ -455,7 +478,31 @@ __3. Write the code to create a computed column in SCHOOL that has the following
 __4. Write the code to create a business rule that restricts a person from serving more than two terms on the Board of Directors in the title of ‘President’:__  
 
 ```sql
--- to be filled out
+CREATE FUNCTION ckPresHasLessThanThreeTerms(@FirstName VARCHAR (30), @LastName VARCHAR (30))
+RETURNS INT
+AS
+BEGIN
+
+DECLARE @RET INT = 0
+IF EXISTS (
+  SELECT * 
+  FROM CONTACT C
+  JOIN BOARD B ON C.ContactID = B.ContactID
+  JOIN CONTACT_BOARD_POSITION CBP ON B.ContactID = CBP.ContactID
+  JOIN BOARD_POSITION BP ON CBP.BoardPositionID = BP.BoardPositionID
+  WHERE BP.BoardPositionName LIKE '%President%'
+  AND DATEDIFF(year , CBP.BeginDate , CBP.EndDate) > 2
+  AND C.FirstName = @FirstName
+  AND C.LastName = @LastName
+)
+
+SET @RET = 1
+RETURN @RET
+END
+
+ALTER TABLE BOARD_POSITION
+ADD CONSTRAINT ckPresHasLessThanThreeTerms
+CHECK (ckPresHasLessThanThreeTerms(FirstName, LastName) = 0)
 ```
 
 
