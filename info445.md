@@ -170,7 +170,7 @@ EXEC tiwansGetCustID
 @DOB = '1875-07-24'
 ```
 
-```
+```sql
 Alter PROCEDURE tiwansGetCustID
 @Fname VARCHAR (35),
 @Lname VARCHAR (35),
@@ -180,7 +180,7 @@ AS
 SET @StudentID = (SELECT StudentID FROM tblSTUDENT WHERE StudentFname = @Fname AND StudentLname = @Lname AND StudentBirth = @DOB)
 ```
 
-```
+```sql
 Create Procedure tiwansGetStudentSate
 @StudentID INT
 AS
