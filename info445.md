@@ -194,74 +194,133 @@ Exec tiwansGetStudentSate
 C
 ===
 ```sql
-/*
-Create the 'wrapper' to execute uspRegisterStudent perhaps 100,000 times
-*/
-
-ALTER PROCEDURE gthaySynthetic_uspRegisterStudent
-@Run INT
+-- Stored procedure:
+CREATE PROCEDURE uspGetStudentID
+@Fname varchar(60),
+@Lname varchar(60),
+@DOB date,
+@StudentID INT OUTPUT
 AS
+SET @StudentID = (SELECT StudentID FROM tblSTUDENT 
+		  WHERE StudentFname = @Fname 
+		  AND StudentLname = @Lname
+		  AND StudentBirth = @DOB)
+-- ^ lookup; originally declared as a variable but now its a parameter
+GO
 
-DECLARE @FirstN varchar(60) 
-DECLARE @LastN Varchar(60) 
-DECLARE @BirthDate Date
-DECLARE @Registration Date = (SELECT GetDate())
-DECLARE @yr char(4) --aligns to ClassYear
+-- Stored procedure 2:
+CREATE PROCEDURE uspGetClassID
+@Year char(4),
+@CourseName varchar(75),
+@QuartName varchar(30),
+@Section varchar(4),
+@ClassID INT OUTPUT
+AS
+SET @ClassID = (SELECT ClassID FROM tblCLASS C
+		JOIN tblCOURSE CR ON C.CourseID = CR.CourseID
+		JOIN tblQUARTER Q ON C.QuarterID = Q.QuarterID
+		WHERE Q.QuarterName = @QuartName
+		AND C.Year = @Year
+		AND C.Section = @Section)
+GO
+
+-- Stored procedure to populate CLASS_LIST
+-- Eventually put a wrapper around
+CREATE PROCEDURE uspRegisterStudent
+@Fname1 varchar(60),
+@Lname1 varchar(60),
+@DOB1 date,
+@RegDate date, -- helps populate CLASS_LIST
+@Year1 char(4),
+@CourseName1 varchar(75),
+@QuartName1 varchar(30),
+@Section1 varchar(4),
+AS
+DECLARE @StudentIDNew INT
+DECLARE @ClassIDNew INT
+
+EXECUTE uspGetStudentID
+@Fname = @Fname1,
+@Lname = @Lname1,
+@DOB = @DOB1,
+@StudentID = @StudentIDNew OUTPUT
+IF @StudentIDNew IS NULL
+	BEGIN
+	PRINT 'StudentID cannot be NULL'
+	RAISEERROR ('@StudentID is Null; Please check spelling.')
+	RETURN
+	END
+
+EXECUTE uspGetStudentID
+@Year = @Year1,
+@CourseName = @CourseName1,
+@QuartName = @QuartName1,
+@Section = @Section1,
+@ClassID = @ClassIDNew OUTPUT
+IF @ClassIDNew IS NULL
+	BEGIN
+	PRINT 'ClassIDNew cannot be NULL'
+	RAISEERROR ('@ClassIDNew is Null; Please check spelling.')
+	RETURN
+	END
+
+BEGIN TRAN G2
+INSERT INTO [dbo].[tblCLASS_LIST]
+	       ([ClassID],   [StudentID],  [Grade], [RegistrationDate])
+	VALUES (@ClassIDNew, @StudentIDNew, NULL,    @RegDate)
+IF @@ERROR <> 0
+	ROLLBACK TRAN G2
+ELSE
+	COMMIT TRAN G2
+
+-- Synthetic transaction
+CREATE PROCEDURE brukSynthetic_uspRegisterStudent
+@Run INT -- Number we pass in that is number of times we want to loop and call stored procedure
+AS
+DECLARE @FirstN varchar(60)
+DECLARE @LastN varchar(60)
+DECLARE @BirthDate date
+DECLARE @Registration date = (SELECT GetDate())
+DECLARE @yr char(4) -- aligns with ClassYear
 DECLARE @Course varchar(75)
 DECLARE @Quarter varchar(30)
 DECLARE @Section varchar(4)
 
-DECLARE @Num numeric(16,16) --holder of RANDOM number called each loop
+DECLARE @Num numeric(16,16) -- holder of RANDOM number called each loop
 DECLARE @StudentCount INT = (SELECT Count(*) FROM tblSTUDENT)
 DECLARE @ClassCount INT = (SELECT Count(*) FROM tblCLASS)
-
 DECLARE @StudentPK INT
 DECLARE @ClassPK INT
-
 WHILE @Run > 0
 BEGIN
-
 SET @Num = (SELECT RAND())
 SET @StudentPK = (SELECT @NUM * @StudentCount)
 SET @ClassPK = (SELECT @NUM * @ClassCount)
-
 SET @FirstN = (SELECT StudentFname FROM tblSTUDENT WHERE StudentID = @StudentPK)
 SET @LastN = (SELECT StudentLname FROM tblSTUDENT WHERE StudentID = @StudentPK)
 SET @BirthDate = (SELECT StudentBirth FROM tblSTUDENT WHERE StudentID = @StudentPK)
-
---Now populate the variables for getting a new classID
-
 SET @yr = (SELECT [Year] FROM tblCLASS WHERE ClassID = @ClassPK)
 SET @Course = (SELECT CourseName FROM tblCOURSE C 
-				JOIN tblCLASS CS ON C.CourseID = CS.CourseID
-				WHERE ClassID = @ClassPK)
+		JOIN tblCLASS CS ON C.CourseID = CS.CourseID
+		WHERE ClassID = @ClassPK)
 SET @Quarter = (SELECT QuarterName FROM tblQUARTER Q 
-				JOIN tblCLASS CS ON CS.QuarterID = Q.QuarterID
-				WHERE ClassID = @ClassPK)
+		JOIN tblCLASS CS ON CS.QuarterID = Q.QuarterID
+		WHERE ClassID = @ClassPK)
 SET @Section = (SELECT Section FROM tblCLASS WHERE ClassID = @ClassPK)
 
-
-
-EXECUTE uspRegisterStudent --this is a real stored procedure we are testing
-
---look up a real/existing student and then grab values from exact same record
+-- Execute outer, real, stored procedure
+EXECUTE uspRegisterStudent
 @Fname1 = @FirstN,
 @Lname1 = @LastN,
-@DOB1 = @BirthDate,
-@RegDate = @Registration,
-
---look up a real/existing course and then grab values from exact same record
+@DOB1 = BirthDate,
+@RegDate = Registration,
 @Year1 = @yr,
 @CourseName1 = @Course,
 @QuartName1 = @Quarter,
 @Section1 = @Section
-
-
-SET @Run = @Run -1
+SET @Run = @Run - 1
 END
 
---now we are ready to execute synthetic wrapper for testing
-
-
-EXEC gthaySynthetic_uspRegisterStudent 100
+-- Now ready to execute synthetic wrapper for testing
+EXEC brukSynthetic_uspRegisterStudent 100
 ```
