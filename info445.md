@@ -57,7 +57,7 @@ CREATE TABLE SCHOOL_TYPE
   SchoolTypeID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
   SchoolTypeName VARCHAR (40) NULL,
   SchoolTypeDescr VARCHAR (500) NULL,
-  FOREIGN KEY (SchoolID) REFERENCES SCHOOL(SchoolID)
+  SchoolID INT FOREIGN KEY REFERENCES SCHOOL(SchoolID)
 )
 ```
 
@@ -189,4 +189,79 @@ Select Top 50 * FROM tblSTUDENT
 
 Exec tiwansGetStudentSate
 @StudentID = 9
+```
+
+C
+===
+```sql
+/*
+Create the 'wrapper' to execute uspRegisterStudent perhaps 100,000 times
+*/
+
+ALTER PROCEDURE gthaySynthetic_uspRegisterStudent
+@Run INT
+AS
+
+DECLARE @FirstN varchar(60) 
+DECLARE @LastN Varchar(60) 
+DECLARE @BirthDate Date
+DECLARE @Registration Date = (SELECT GetDate())
+DECLARE @yr char(4) --aligns to ClassYear
+DECLARE @Course varchar(75)
+DECLARE @Quarter varchar(30)
+DECLARE @Section varchar(4)
+
+DECLARE @Num numeric(16,16) --holder of RANDOM number called each loop
+DECLARE @StudentCount INT = (SELECT Count(*) FROM tblSTUDENT)
+DECLARE @ClassCount INT = (SELECT Count(*) FROM tblCLASS)
+
+DECLARE @StudentPK INT
+DECLARE @ClassPK INT
+
+WHILE @Run > 0
+BEGIN
+
+SET @Num = (SELECT RAND())
+SET @StudentPK = (SELECT @NUM * @StudentCount)
+SET @ClassPK = (SELECT @NUM * @ClassCount)
+
+SET @FirstN = (SELECT StudentFname FROM tblSTUDENT WHERE StudentID = @StudentPK)
+SET @LastN = (SELECT StudentLname FROM tblSTUDENT WHERE StudentID = @StudentPK)
+SET @BirthDate = (SELECT StudentBirth FROM tblSTUDENT WHERE StudentID = @StudentPK)
+
+--Now populate the variables for getting a new classID
+
+SET @yr = (SELECT [Year] FROM tblCLASS WHERE ClassID = @ClassPK)
+SET @Course = (SELECT CourseName FROM tblCOURSE C 
+				JOIN tblCLASS CS ON C.CourseID = CS.CourseID
+				WHERE ClassID = @ClassPK)
+SET @Quarter = (SELECT QuarterName FROM tblQUARTER Q 
+				JOIN tblCLASS CS ON CS.QuarterID = Q.QuarterID
+				WHERE ClassID = @ClassPK)
+SET @Section = (SELECT Section FROM tblCLASS WHERE ClassID = @ClassPK)
+
+
+
+EXECUTE uspRegisterStudent --this is a real stored procedure we are testing
+
+--look up a real/existing student and then grab values from exact same record
+@Fname1 = @FirstN,
+@Lname1 = @LastN,
+@DOB1 = @BirthDate,
+@RegDate = @Registration,
+
+--look up a real/existing course and then grab values from exact same record
+@Year1 = @yr,
+@CourseName1 = @Course,
+@QuartName1 = @Quarter,
+@Section1 = @Section
+
+
+SET @Run = @Run -1
+END
+
+--now we are ready to execute synthetic wrapper for testing
+
+
+EXEC gthaySynthetic_uspRegisterStudent 100
 ```
