@@ -175,3 +175,39 @@ Transaction processing links multiple individual operations into a single transa
 
 Transaction processing guards against hardware and software errors that might leave a transaction partially completed. If the computer system crashes in the middle of a transaction, the system guarantees that all operations in any uncommitted transactions are cancelled. 
 
+Part B
+===
+Husky Gym is an athletics facility in the University District that offers monthly memberships for weight-training to students, staff and faculty. The following are facts established in a preliminary phone interview with the owners:
+
+- There are 11 certified Nutrition and Athletic Well-Being Advisors on staff. 
+- In addition to a full-size basketball court and an Olympic-grade lap pool, there are 57 independent exercise machines as well as over 85,000 pounds in free-weights. 
+- There is a gender-neutral sauna and free towel service after 3:00 PM on week days
+- The facility has 4 racquetball courts that can be converted to pickle ball if reservations are made a day prior
+- The 25-bike spin room and yoga floor has a side-entrance to Brooklyn Avenue. 
+- Anyone registering for the 3-month Yoga for Life and Beauty class is eligible for complimentary child-care at ‘Teeny-Toddlers’ across the street.
+
+The owners of Husky Gym would like a database designed to keep track of staff, members, their visits, exercise equipment, all maintenance and any incidents arising during operating hours. One of their primary goals is to lower the occurrence of injuries related to faulty equipment. Design a database ERD in 3NF that will allow them to better operate the business. __Do not include payroll or accounting.__
+
+Part C
+===
+__Create at least one stored procedure that takes in several parameters of friendly names and INSERTs into multiple tables in an explicit transaction with proper error-handling__
+```sql
+-- not yet done...
+```
+
+__Create at least one business rule or computed column leveraging a function__
+```sql
+-- not yet done...
+```
+
+__Create at least one stored procedure that calls additional stored procedures (‘nested’ stored procedures) leveraging OUTPUT parameters__
+```sql
+-- not yet done...
+```
+
+__Create at least one complex view (multiple JOINs, GROUP BY, HAVING, CASE)__
+```sql
+-- not yet done...
+```
+
+![Part C ERD](http://i.imgur.com/hyyGK53.jpg)
