@@ -266,7 +266,7 @@ ADD TotalClasses INT
 AS (dbo.fnTotalClasses(DepartmentName))
 ```
 
-```
+```sql
 -- Creates a business rule that only classes from the "Information School"
 -- are allowed to be in the building "Mary Gates Hall"
 
