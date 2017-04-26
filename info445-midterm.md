@@ -266,6 +266,36 @@ ADD TotalClasses INT
 AS (dbo.fnTotalClasses(DepartmentName))
 ```
 
+```
+-- Creates a business rule that only classes from the "Information School"
+-- are allowed to be in the building "Mary Gates Hall"
+
+CREATE FUNCTION ckOnlyInfoClassesInMGH()
+RETURNS INT
+AS
+BEGIN
+
+DECLARE @RET INT = 0
+IF EXISTS (
+  SELECT * 
+  FROM COLLEGE CLLG
+  JOIN DEPARTMENT D ON CLLG.CollegeID = D.CollegeID
+  JOIN COURSE CRS ON D.DeptID = CRS.DeptID
+  JOIN CLASS C ON CRS.CourseID = C.CourseID
+  JOIN ROOM R ON C.RoomID = R.RoomID
+  JOIN BUILDING B ON R.BuildingID = B.BuildingID
+  WHERE CLLG.CollegeName != "Information School"
+  AND B.BuildingName = "Mary Gates Hall"
+)
+SET @RET = 1
+RETURN @RET
+END
+
+ALTER TABLE BUILDING
+ADD CONSTRAINT ckOnlyInfoClassesInMGH
+CHECK (dbo.ckOnlyInfoClassesInMGH() = 0)
+```
+
 __Create at least one stored procedure that calls additional stored procedures (‘nested’ stored procedures) leveraging OUTPUT parameters__
 ```sql
 -- not yet done...
