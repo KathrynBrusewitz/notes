@@ -387,7 +387,7 @@ IF @RelationshipIDNew IS NULL
 
 BEGIN Transaction
     INSERT INTO PERSON_CONTACT (Person1ID, Person2ID, RelationshipID)
-    VALUES (Person1IDNew, Person2IDNew, RelationshipIDNew)
+    VALUES (@Person1IDNew, @Person2IDNew, @RelationshipIDNew)
 IF @@ERROR <> 0
     ROLLBACK Transaction
 ELSE
