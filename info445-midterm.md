@@ -298,7 +298,100 @@ CHECK (dbo.ckOnlyInfoClassesInMGH() = 0)
 
 __Create at least one stored procedure that calls additional stored procedures (‘nested’ stored procedures) leveraging OUTPUT parameters__
 ```sql
--- not yet done...
+-- Create a nested stored procedure for adding a new PERSON_CONTACT
+
+-- Stored procedure to get Person1ID:
+CREATE PROCEDURE uspGetPerson1ID
+@Fname VARCHAR (60)
+@Lname VARCHAR (60)
+@DateOfBirth DATE
+@PersonID INT OUTPUT
+AS
+SET @PersonID = (
+    SELECT PersonID FROM PERSON
+    WHERE Fname = @Fname AND Lname = @Lname AND DateOfBirth = @DateOfBirth
+)
+GO
+
+-- Stored procedure to get Person2ID:
+CREATE PROCEDURE uspGetPerson2ID
+@Fname VARCHAR (60)
+@Lname VARCHAR (60)
+@DateOfBirth DATE
+@PersonID INT OUTPUT
+AS
+SET @PersonID = (
+    SELECT PersonID FROM PERSON
+    WHERE Fname = @Fname AND Lname = @Lname AND DateOfBirth = @DateOfBirth
+)
+GO
+
+-- Stored procedure to get RelationshipID:
+CREATE PROCEDURE uspGetRelationshipID
+@RelationshipName VARCHAR (60)
+@RelationshipID INT OUTPUT
+AS
+SET @RelationshipID = (
+    SELECT RelationshipID FROM RELATIONSHIP
+    WHERE RelationshipName = @RelationshipName
+)
+GO
+
+-- Stored procedure to populate PERSON_CONTACT
+CREATE PROCEDURE uspRegisterPersonContact
+@Fname1 VARCHAR (60)
+@Lname1 VARCHAR (60)
+@DateOfBirth1 DATE
+@Fname2 VARCHAR (60)
+@Lname2 VARCHAR (60)
+@DateOfBirth2 DATE
+@RelationshipNameNew VARCHAR (60)
+AS
+DECLARE @Person1IDNew INT
+DECLARE @Person2IDNew INT
+DECLARE @RelationshipIDNew INT
+
+EXECUTE uspGetPerson1ID
+@Fname = @Fname1,
+@Lname = @Lname1,
+@DateOfBirth = @DateOfBirth1,
+@PersonID = Person1IDNew OUTPUT
+IF @Person1IDNew IS NULL
+    BEGIN
+    PRINT 'PersonID cannot be NULL'
+    RAISEERROR ('@PersonID is Null; Please check spelling.')
+    RETURN
+    END
+
+EXECUTE uspGetPerson2ID
+@Fname = @Fname2,
+@Lname = @Lname2,
+@DateOfBirth = @DateOfBirth2,
+@PersonID = Person2IDNew OUTPUT
+IF @Person2IDNew IS NULL
+    BEGIN
+    PRINT 'PersonID cannot be NULL'
+    RAISEERROR ('@PersonID is Null; Please check spelling.')
+    RETURN
+    END
+
+EXECUTE uspGetRelationshipID
+@RelationshipName = @RelationshipNameNew,
+@RelationshipID = @RelationshipIDNew OUTPUT
+IF @RelationshipIDNew IS NULL
+    BEGIN
+    PRINT 'RelationshipID cannot be NULL'
+    RAISEERROR ('@RelationshipID is Null; Please check spelling.')
+    RETURN
+    END
+
+BEGIN Transaction
+    INSERT INTO PERSON_CONTACT (Person1ID, Person2ID, RelationshipID)
+    VALUES (Person1IDNew, Person2IDNew, RelationshipIDNew)
+IF @@ERROR <> 0
+    ROLLBACK TRAN G2
+ELSE
+    COMMIT TRAN G2
 ```
 
 __Create at least one complex view (multiple JOINs, GROUP BY, HAVING, CASE)__
