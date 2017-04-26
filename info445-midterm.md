@@ -389,9 +389,9 @@ BEGIN Transaction
     INSERT INTO PERSON_CONTACT (Person1ID, Person2ID, RelationshipID)
     VALUES (Person1IDNew, Person2IDNew, RelationshipIDNew)
 IF @@ERROR <> 0
-    ROLLBACK TRAN G2
+    ROLLBACK Transaction
 ELSE
-    COMMIT TRAN G2
+    COMMIT Transaction
 ```
 
 __Create at least one complex view (multiple JOINs, GROUP BY, HAVING, CASE)__
