@@ -6,7 +6,15 @@ __1. Explain the concept of error-handling (try and be complete: briefly explain
 
 We want to handle errors when we anticipate failures. It is better to "fail early" than to "fail late". The concept of error-handling involves managing communication to the client. We need to communicate to the client what failed, where did it fail, and why did it fail. This most likely comes down to logging the event. A log will have: a Message number, Severity level, State, Procedure, Line, and Message.
 
+Why do we want to anticipate errors? To improve performance. If we fail late, we affect other transactions. We don't want a cascading rollback of many transactions. If we send messages with the error, the client will know why it failed and troubleshoot.
+
 __2. Normalization seeks to eliminate several different types of data anomalies; please identify what these data anomalies are and how normalization can eliminate them.__
+
+Insertion anomaly: Example - Student Table has dorm information (DormName and RoomStyle); Can't insert dorm information without a student associated with a student. Solution is to create a separate table for dorms and an associative entity to keep history.
+
+Deletion anomaly: Getting rid of data that will get rid of other data that we want to keep.
+
+Update anomaly: Having to update RoomStyle would mean we have to update all students (could be hundreds) and would be a hassle. If it was a separate table, we don't have to update, we just have to insert into the table.
 
 Normalization makes the database easier to access and maintain data and take up minimal storage space. It helps ensure that the relations derived from the data model do not have redundant data, which can cause update anomalies. Normalization is a process for determining which attributes belong in specific entities. Identifies optimal grouping for attributes. Normalization is essentially an exercise where we look for nouns that are misplaced. If we look for attributes that are dependents of columns other than the primary key, we eliminate redundant data, therefore eliminating update anomalies.
 
@@ -21,7 +29,7 @@ OLTP:
 
 OLAP:
 - Low number of transactions
-- Queries are often complex
+- Queries are often complex and may be thousands/millions of rows
 - Effectiveness = response time
 - Aggregated, historical data stored in a multi-dimensional schema (usually star schema)
 
@@ -30,10 +38,12 @@ __4. Explain the difference between synchronous and asynchronous data transfer; 
 Synchronous
 - Communications are serial 
 - In database terms, transactions wait for commit confirmation
+- Care about data loss
 
 Asynchronous
 - Communications are parallel
 - Transactions do not wait for commit confirmation
+- Speed is more important than accuracy
 
 __5. Describe 5 different SQL commands that are considered ‘control of flow’ language.__
 
@@ -69,41 +79,40 @@ TRY...CATCH
 
 __6. Compare database mirroring, log shipping and replication; when is each the preferred tool of use?__
 
-Database Mirroring allows a database to mirror its data to another SQL Server thus providing redundancy. Best use of database mirroring is for databases that are considered mission-critical or otherwise cannot sustain significant downtime. 
+Database Mirroring allows a database to mirror its data to another SQL Server thus providing redundancy. Best use of database mirroring is for databases that are considered mission-critical or otherwise cannot sustain significant downtime. Mirroring is synchronous; does not filter like replication.
 
 Database Mirroring Pros:
 - Mirroring can provide extremely High Availability
-- Automatic failover in case primary server crashes
-- Easy to set up
+- Automatic failover in case primary server crashes = no downtime
 - Flexibility in configuration
 - Provides redundancy at the database level
 
 Database Mirroring Cons:
-- Operating modes with synchronous transactions can impact system performance
+- Synchronous transactions can impact system performance
 - Have to create snapshots of the mirror database in order to get read access for reporting
 - Only committed transactions are transferred.
 
-Log Shipping allows a database to automatically send transaction log backups from a primary database on a primary server instance to one or more secondary databases on separate secondary server instances. 
+Log Shipping allows a database to automatically send transaction log backups from a primary database on a primary server instance to one or more secondary databases on separate secondary server instances. Not filtered; exact copy of data. Read activity = shared lock. Write activity = exclusive lock (this will prevent all read activity. Use log shipping to create a copy so read activity could occur while write activity occurs on the other database.
 
 Log Shipping Pros:
 - Provides a disaster-recovery solution for a single primary database and one or more secondary databases
 - Provides additional redundancy to your backup strategy
 - Can use the secondary database for reporting purposes
-- Easy to set up and maintain
 - Data can be copied on more than one location
 - All committed and un-committed transactions are transferred
 
 Log Shipping Cons:
+- Not used for high availability
 - Does not automatically failover from the primary server to the secondary server
 - Secondary database must be brought online manually
 - Need to manage all the databases separately
 - Secondary database isn't fully readable while the restore process is running
 
-Replication is a set of technologies for copying and distributing data and database objects from one database to another and then synchronizing between databases to maintain consistency. Tracks and detects changes and ships the changes.
+Replication tracks and detects changes and ships the changes. Use replication to filter data on geographic data (send only data relevant to your location). Or, certain locations receive specific information based on their job function.
 
 Replication Pros:
 - Limit specific objects that are replicated to the subscriber. This can be useful if only a subset of tables is needed.
-- Can support distributed processing by spreading the workload of an application across several servers.
+- Gives ability to scale up.
 
 Replication Cons: 
 - Replication is bound to database objects, so if you create a new object on the database it is not automatically added.
@@ -165,11 +174,7 @@ High Availability:
   - 99.9% = 8.7 hours of downtime/year
 - Tool: Database Snapshots - Quick and efficient; only modified data gets moved
 
-__11. Describe the differences between the various types of indexes presented during lecture.__
-
-???
-
-__12. Discuss the mechanisms employed by database management systems to ensure recoverability for all transactions that may be interrupted during processing.__
+__11. Discuss the mechanisms employed by database management systems to ensure recoverability for all transactions that may be interrupted during processing.__
 
 Transaction processing links multiple individual operations into a single transaction and ensures that either all operations in a transaction are completed without error, or none of them are. If some of the operations are completed but errors occur when the others are attempted, the transaction-processing system "rolls back" ALL of the operations in the transaction (including the successful ones). This restores the system to the consistent state that it was in before processing of the transaction began.
 
@@ -192,7 +197,48 @@ Part C
 ===
 __Create at least one stored procedure that takes in several parameters of friendly names and INSERTs into multiple tables in an explicit transaction with proper error-handling__
 ```sql
--- not yet done...
+CREATE PROCEDURE uspNewSpecialNeedPerson
+@Fname VARCHAR (30)
+@Lname VARCHAR (30)
+@GenderName VARCHAR (30)
+@AreaCode INT
+@PhoneNum INT
+@EthnicityName VARCHAR (30)
+@SpecialNeedName VARCHAR (60)
+
+-- Declare and initiate IDs for transaction(s)
+AS
+DECLARE @PersonID INT
+DECLARE @GenderID INT
+DECLARE @PhoneID INT
+DECLARE @EthnicityID INT
+DECLARE @SpecialNeedID INT
+
+SET @GenderID = (SELECT GenderID FROM GENDER WHERE GenderName = @GenderName)
+SET @EthnicityID = (SELECT EthnicityID FROM ETHNICITY WHERE EthnicityName = @EthnicityName)
+SET @SpecialNeedID = SELECT SpecialNeedID FROM SPECIAL_NEED WHERE SpecialNeedName = @SpecialNeedName)
+
+BEGIN Transaction
+  -- Insert a new row into PHONE 
+  INSERT INTO PHONE (AreaCode, PhoneNum)
+  VALUES (@AreaCode, @PhoneNum)
+
+  SET @PhoneID = (SELECT SCOPE_IDENTITY())
+
+  -- Insert a new row into PERSON
+  INSERT INTO PERSON (Fname, Lname, EthnicityID, GenderID, PhoneID)
+  VALUES (@Fname, @Lname, @EthnicityID, @GenderID, @PhoneID)
+
+  SET @PersonID = (SELECT SCOPE_IDENTITY())
+
+  -- Insert a new row into STUDENT_SPECIAL_NEED
+  INSERT INTO STUDENT_SPECIAL_NEED (PersonID, SpecialNeedID)
+  VALUES (@PersonID, @SpecialNeedID)
+
+IF @@ERROR <> 0
+  ROLLBACK Transaction
+ELSE
+  COMMIT Transaction
 ```
 
 __Create at least one business rule or computed column leveraging a function__
