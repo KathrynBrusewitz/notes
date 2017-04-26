@@ -303,7 +303,17 @@ __Create at least one stored procedure that calls additional stored procedures (
 
 __Create at least one complex view (multiple JOINs, GROUP BY, HAVING, CASE)__
 ```sql
--- not yet done...
+-- Determine the total number of classes for each department
+-- that were offered from Fall Quarter 2010 until Fall Quarter 2016
+-- and only include departments with less than 20 classes
+
+SELECT D.DeptID, D.DeptName, Count(*)
+FROM DEPARTMENT D
+JOIN COURSE CRS ON D.DeptID = CRS.DeptID
+JOIN CLASS C ON CRS.CourseID = C.CourseID
+AND C.BeginDate BETWEEN '9/1/2010' AND '10/1/2016'
+GROUP BY D.DeptID, D.DeptName
+HAVING Count(*) < 20
 ```
 
 ![Part C ERD](http://i.imgur.com/hyyGK53.jpg)
