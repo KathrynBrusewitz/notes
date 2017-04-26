@@ -243,7 +243,27 @@ ELSE
 
 __Create at least one business rule or computed column leveraging a function__
 ```sql
--- not yet done...
+-- Creates a computed column in DEPARTMENT that
+-- tracks number of Classes in each Department
+
+CREATE FUNCTION fnTotalClasses(@Department VARCHAR (40))
+RETURNS INT
+AS
+BEGIN
+DECLARE @numOfClasses INT
+
+SELECT @numOfClasses = COUNT(C.ClassID)
+FROM CLASS C
+JOIN COURSE CRS ON C.CourseID = CRS.CourseID
+JOIN DEPARTMENT D ON CRS.DeptID = D.DeptID
+WHERE D.DeptName = @Department
+
+RETURN @numOfClasses
+END
+
+ALTER TABLE DEPARTMENT
+ADD TotalClasses INT
+AS (dbo.fnTotalClasses(DepartmentName))
 ```
 
 __Create at least one stored procedure that calls additional stored procedures (‘nested’ stored procedures) leveraging OUTPUT parameters__
