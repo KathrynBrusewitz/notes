@@ -4,34 +4,35 @@ Part A
 
 __1. Explain the concept of error-handling (try and be complete: briefly explain what is it, when it happens, why it happens and how it happens). Touch on the benefits of error-handling as well.__
 
-We want to handle errors when we anticipate failures. It is better to "fail early" than to "fail late". The concept of error-handling involves managing communication to the client. We need to communicate to the client what failed, where did it fail, and why did it fail. This most likely comes down to logging the event. A log will have: a Message number, Severity level, State, Procedure, Line, and Message.
-
-Why do we want to anticipate errors? To improve performance. If we fail late, we affect other transactions. We don't want a cascading rollback of many transactions. If we send messages with the error, the client will know why it failed and troubleshoot.
+We want to handle errors when we anticipate failures in order to improve performance. It is better to "fail early" than to "fail late". If we fail late, we affect other transactions and can cause a cascading rollback of many transactions. If we fail early, we avoid having to rollback hundreds/thousands of transactions. To help the client troubleshoot errors, we log out messages with the error to let them know what/why/where it failed.
 
 __2. Normalization seeks to eliminate several different types of data anomalies; please identify what these data anomalies are and how normalization can eliminate them.__
 
-Insertion anomaly: Example - Student Table has dorm information (DormName and RoomStyle); Can't insert dorm information without a student associated with a student. Solution is to create a separate table for dorms and an associative entity to keep history.
+Imagine an un-normalized Student Table with dorm information inside it (DormName and RoomStyle). Having such an un-normalized table can bring up the following anomalies:
 
-Deletion anomaly: Getting rid of data that will get rid of other data that we want to keep.
+Insertion anomaly: We can't insert a new dorm without a student associated with that dorm. We may have a brand new dorm without any students living in it yet.
 
-Update anomaly: Having to update RoomStyle would mean we have to update all students (could be hundreds) and would be a hassle. If it was a separate table, we don't have to update, we just have to insert into the table.
+Deletion anomaly: We can't delete data that without deleting other data that we might want to keep. If we delete a student, we can lose information about a dorm if that student was the only student living in that dorm.
 
-Normalization makes the database easier to access and maintain data and take up minimal storage space. It helps ensure that the relations derived from the data model do not have redundant data, which can cause update anomalies. Normalization is a process for determining which attributes belong in specific entities. Identifies optimal grouping for attributes. Normalization is essentially an exercise where we look for nouns that are misplaced. If we look for attributes that are dependents of columns other than the primary key, we eliminate redundant data, therefore eliminating update anomalies.
+Update anomaly: If there was an error in RoomStyle (such as a misspelling or no longer offered or changed name), we may have to update hundreds of students and that would be a hassle.
+
+The solution to avoid these anomalies would be to normalize Student table by creating a separate table (Dorm) for dorms and an associative entity (Student_Dorm) to keep history.
+
+Normalization helps ensure there is no redundant data, which can cause the above anomalies.
 
 __3. Describe the differences between Online Transaction Processing (OLTP) databases and those that are supporting Data Warehousing or Online Analytical Processing (OLAP).__
 
 OLTP:
 - High number of short online transactions (INSERT UPDATE DELETE)
 - Very fast query processing
-- Maintain data integrity in multi-access environments
-- Effectiveness = number of transactions per second
+- Effectiveness is measured by number of transactions per second
 - Detailed and current data
 
 OLAP:
 - Low number of transactions
 - Queries are often complex and may be thousands/millions of rows
-- Effectiveness = response time
-- Aggregated, historical data stored in a multi-dimensional schema (usually star schema)
+- Effectiveness is measured by response time
+- Aggregated, historical data
 
 __4. Explain the difference between synchronous and asynchronous data transfer; when are each preferred?__
 
