@@ -38,7 +38,7 @@ __4. Explain the difference between synchronous and asynchronous data transfer; 
 
 Synchronous
 - Communications are serial 
-- In database terms, transactions wait for commit confirmation
+- Transactions wait for commit confirmation
 - Care about data loss
 
 Asynchronous
