@@ -181,6 +181,23 @@ Transaction processing links multiple individual operations into a single transa
 
 Transaction processing guards against hardware and software errors that might leave a transaction partially completed. If the computer system crashes in the middle of a transaction, the system guarantees that all operations in any uncommitted transactions are cancelled. 
 
+Transaction Log: write-ahead logging
+- Any insert/update/delete is written to transaction-log in memory first
+- Allows the system to rollback transactions if processing fails
+- Allows the system to roll-forward transactions that have committed in memory
+- "BEGIN TRAN" "COMMIT TRAN"
+
+Checkpoint:
+- Every couple minutes there is a checkpoint
+- Batch of active transactions are logged
+- Stop all processing in a database and flush active portion of log to disk
+- In case of failure, small batch allows for quick writing to disk
+
+Explicit Transaction
+
+Synchronous data transfer/2-phase commit
+- Makes sure both databases are always identical
+
 Part B
 ===
 Husky Gym is an athletics facility in the University District that offers monthly memberships for weight-training to students, staff and faculty. The following are facts established in a preliminary phone interview with the owners:
@@ -357,7 +374,7 @@ EXECUTE uspGetPerson1ID
 @Fname = @Fname1,
 @Lname = @Lname1,
 @DateOfBirth = @DateOfBirth1,
-@PersonID = Person1IDNew OUTPUT
+@PersonID = @Person1IDNew OUTPUT
 IF @Person1IDNew IS NULL
     BEGIN
     PRINT 'PersonID cannot be NULL'
@@ -369,7 +386,7 @@ EXECUTE uspGetPerson2ID
 @Fname = @Fname2,
 @Lname = @Lname2,
 @DateOfBirth = @DateOfBirth2,
-@PersonID = Person2IDNew OUTPUT
+@PersonID = @Person2IDNew OUTPUT
 IF @Person2IDNew IS NULL
     BEGIN
     PRINT 'PersonID cannot be NULL'
