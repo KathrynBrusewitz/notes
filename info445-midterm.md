@@ -253,11 +253,12 @@ AS
 BEGIN
 DECLARE @numOfClasses INT
 
-SELECT @numOfClasses = COUNT(C.ClassID)
-FROM CLASS C
-JOIN COURSE CRS ON C.CourseID = CRS.CourseID
-JOIN DEPARTMENT D ON CRS.DeptID = D.DeptID
-WHERE D.DeptName = @Department
+SET @numOfClasses = (SELECT COUNT(C.ClassID)
+  FROM CLASS C
+  JOIN COURSE CRS ON C.CourseID = CRS.CourseID
+  JOIN DEPARTMENT D ON CRS.DeptID = D.DeptID
+  WHERE D.DeptName = @Department
+)
 
 RETURN @numOfClasses
 END
