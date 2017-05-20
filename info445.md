@@ -324,3 +324,153 @@ END
 -- Now ready to execute synthetic wrapper for testing
 EXEC brukSynthetic_uspRegisterStudent 100
 ```
+
+D
+===
+```sql
+/* [dbo].[uspGetQualificationID] */
+
+USE [QuietGroup_GymDB]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[uspGetQualificationID]
+@QualificationName varchar(100),
+@QualificationID INT OUTPUT
+
+AS
+
+SET @QualificationID = (
+        SELECT QualificationID FROM QUALIFICATION
+        WHERE QualificationName = @QualificationName)
+
+/* [dbo].[uspGetEmployeeID_NoDOB] */
+
+USE [QuietGroup_GymDB]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[uspGetEmployeeID_NoDOB]
+@EmployeeFname varchar(100),
+@EmployeeLname varchar(200),
+@EmployeeID INT OUTPUT
+
+AS
+
+SET @EmployeeID = (
+        SELECT EmployeeID FROM EMPLOYEE
+        WHERE EmployeeFname = @EmployeeFname
+        AND EmployeeLname = @EmployeeLname)
+
+/* [dbo].[uspAddQualificationToEmployee] */
+
+USE [QuietGroup_GymDB]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[uspAddQualificationToEmployee]
+@EmployeeFname1 varchar(100),
+@EmployeeLname1 varchar(200),
+@QualificationName1 varchar(100)
+AS
+
+DECLARE @EmployeeID1 INT
+DECLARE @QualificationID1 INT
+
+EXECUTE uspGetEmployeeID_NoDOB
+@EmployeeFname = @EmployeeFname1,
+@EmployeeLname = @EmployeeLname1,
+@EmployeeID = @EmployeeID1 OUTPUT
+
+IF @EmployeeID1 IS NULL
+BEGIN
+        PRINT 'EmployeeID cannot be null'
+        RAISERROR('EmployeeID is null, please check spelling', 12, 1)
+        RETURN
+END
+
+EXECUTE uspGetQualificationID
+@QualificationName = @QualificationName1,
+@QualificationID = @QualificationID1 OUTPUT
+
+IF @QualificationID1 IS NULL
+BEGIN
+        PRINT 'QualificationID cannot be null'
+        RAISERROR('QualificationID is null, please check spelling', 12, 1)
+        RETURN
+END
+
+BEGIN TRAN
+        INSERT INTO EMPLOYEE_QUALIFICATION(EmployeeID, QualificationID)
+        VALUES(@EmployeeID1, @QualificationID1)
+
+IF @@ERROR <> 0
+        ROLLBACK TRAN
+ELSE
+        COMMIT TRAN
+
+/* [dbo].[bruk_synthetic_uspAddQualificationToEmployee] */
+
+USE [QuietGroup_GymDB]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[bruk_synthetic_uspAddQualificationToEmployee]
+@Run INT
+AS
+
+DECLARE @EmployeeFirstName varchar(100)
+DECLARE @EmployeeLastName varchar(200)
+DECLARE @QualificationName varchar(100)
+
+DECLARE @Num NUMERIC(16, 16)
+DECLARE @EmployeeCount INT = (SELECT Count(*) FROM EMPLOYEE)
+DECLARE @QualificationCount INT = (SELECT Count(*) FROM QUALIFICATION)
+DECLARE @EmployeePK INT
+DECLARE @QualificationPK INT
+
+WHILE @Run > 0
+BEGIN
+
+SET @Num = (SELECT RAND())
+SET @EmployeePK = (SELECT @Num * @EmployeeCount)
+SET @QualificationPK = (SELECT @Num * @QualificationCount)
+
+IF (@EmployeePK = 0)
+BEGIN
+        SET @EmployeePK = 1
+END
+
+IF (@QualificationPK = 0)
+BEGIN
+        SET @QualificationPK = 1
+END
+
+SET @EmployeeFirstName = (SELECT EmployeeFname FROM EMPLOYEE WHERE EmployeeID = @EmployeePK)
+SET @EmployeeLastName = (SELECT EmployeeLname FROM EMPLOYEE WHERE EmployeeID = @EmployeePK)
+SET @QualificationName = (SELECT QualificationName FROM QUALIFICATION WHERE QualificationID = @QualificationPK)
+
+EXECUTE uspAddQualificationToEmployee
+@EmployeeFname1 = @EmployeeFirstName,
+@EmployeeLname1 = @EmployeeLastName,
+@QualificationName1 = @QualificationName
+
+SET @Run = @Run -1
+END
+```
