@@ -1,13 +1,196 @@
-Part A
+Info 340
 ===
+
+Midterm
+---
+__1. Cite the three major phases of database development and include high-level objectives of each.__  
+
+Conceptual database design creates the conceptual model of the data. It ignores all physical details (e.g. programming languages, hardware platform and application programs). The data model is built on the information specified by the users' requirements.
+
+Logical database design builds off of the conceptual database design. The underlying data model of the target DBMS is identified (e.g. relational, network, or hierarchical). It ignores all physical details (e.g. storage structures or indexes). Normalization is used to test its correctness.
+
+Physical database design identifies the target DBMS system and has a description of the physical implementation on secondary storage: relations, file organization, indexes, integrity constraints, and security measures.
+
+
+__2. Explain the purpose of associative entities and provide an example.__  
+
+Associative entities maps 2 or more tables together to resolve many-to-many relationships. For example, an actor can act in many films, and a film can have many actors. If this was illustrated, there would be an actor table with the primary key `actor_id` and a name attribute, as well as a film table with the primary key `film_id` and a film name attribute:  
+
+    Actor
+    -----
+    actor_id
+    name
+
+    Film
+    ----
+    film_id
+    name
+
+An associative entity to resolve this into a one-to-many relationship would reference the primary keys from both tables: `actor_id` and `film_id`:  
+
+    ActorFilm
+    ---------
+    actor_id
+    film_id
+
+As an aside, an associative relationship attribute could be added to ActorFilm, like a `date_casted` timestamp, because it would not fit in the Actor table nor the Film table:  
+
+    ActorFilm
+    ---------
+    actor_id
+    film_id
+    date_casted
+
+
+__3. Explain the benefits of the Relational database design when compared to Hierarchical design.__  
+
+Hierarchical are:  
+- difficult to scale  
+- inefficient with large data collection  
+- difficult to do complex relationships  
+- prone to bad data, anomalies, and redundancy  
+- file locations are hard-coded; moving files is problematic  
+- requires specialized skills to set-up, modify, and maintain  
+
+Relational databases solve all these issues:  
+- easy to scale  
+- efficient with large data collections  
+- can adapt and customize for complex relationships  
+- guarantees accurate data and integrity of data  
+- does not require specialized skills to set up, modify, and maintain because standards have allowed platform-independence  
+
+__4. Explain how we ended-up with inefficient ‘hierarchical’ database systems.__  
+
+For nearly the entire history of mankind, information was tracked and written down in rock or on paper. It was only recently that we've had the ability to store information and data on computers. IBM created the first database model on computers in the 60s, which was hierarchical. This was based on the thousands-year-old paper-based system, where single copies are organized by topic and stored in cabinets. This is a parent-child (one-to-many) relationship, which is difficult to update and vulnerable to destruction.
+
+__5. Explain what is meant by ‘paper-based’ systems.__  
+
+Paper-based systems were an early attempt to computerize the manual filing system. A filing system could contain receipts, invoices, bank statements, or products, tasks, clients, or employees. When we need to look something up, we search through the system starting from the first entry until we find what we want. There may have an indexing system that helps locate what we want more quickly. For security, the cabinets may have locks or may be located in secure areas of the building.
+
+__6. What was the ‘brilliant breakthrough’ that defines relational theory? Why has it not changed in structure or design in nearly 50 years?__  
+
+Concept of primary/foreign key brought _referential integrity_. Can take one key from one table to another table in order to connect the two. Ability to find a unique row out of a billion rows very quickly. We no longer had to build reports like we did in Hierarchical databases.
+
+__7. Discuss the purpose and benefits of following the normalization process during database design.__  
+
+Normalization makes the database easier to access and maintain data and take up minimal storage space. It helps ensure that the relations derived from the data model do not have redundant data, which can cause update anomalies.
+
+What: process for determining which attributes belong in specific entities. Identifies optimal grouping for attributes.  
+
+How: A math exercise where we look for nouns that are misplaced. Look for attributes that are dependents of columns other than the primary key  
+
+Why:  
+- Efficiency in writing speed, because it writes in one location  
+- Efficiency in storage  
+- More tables = fewer collisions. For example if you have one street to get into a city, it is going to be very crowded, whereas if you have 10 streets to get into a city it won’t be as crowded. Same thing as if you have 1 table with thousands of objects. Your database will be too crowded, so it is best to split these up into many different tables  
+- Transactions are smaller  
+- Look up data as needed  
+- Fewer anomalies  
+
+__8. Explain what the instructor means by the phrase ‘organize or die’.__  
+
+Over history, those that developed systems survived e.g. groups, cities. Farmers developed systems to grow more food and increase efficiency, societies developed systems of economies and markets and specialized roles and labor, cities developed systems of irrigation, sewage, roads, and so on.
+
+These systems help optimize society and organizations so that they can learn and innovate and gain a competitive advantage over those that do not. Organizations will be better able to adapt to a dynamic marketplace if they can track, control, manage, and obtain data.
+
+__9. Explain what is meant by ‘referential integrity’__  
+
+The concept of primary key/foreign key is essential to referential integrity.
+
+In simple terms, 'referential integrity' is a guarantee that the target it 'refers' to will be found. A lack of referential integrity in a database can lead relational databases to return incomplete data, usually with no indication of an error. When a foreign key value is used it must reference a valid, existing primary key in the parent table.
+
+__10. Describe the difference between a natural key and a surrogate key. Why might one be preferred over the other?__  
+
+Natural Key: The same as a composite key. A key that is formed of attributes that already exist in the real world.  
+Surrogate Key: a unique identifier for either an entity in the modeled world or an object in the database.  
+
+__11. Explain what data types are and provide examples; when might one be preferred over another?__  
+
+A data type defines what kind of value a column can contain. Character, Varchar, and Integer are common string types.
+
+Use Character if you have a fixed length: e.g. phone number.  
+Otherwise, use Varchar: e.g. names, because names do not have the same length.
+Use Integer for numbers: e.g. age
+
+__12. Explain what is meant by cardinality and provide an example.__  
+
+Cardinality is the number of occurrences of one entity when involved with the relationship of another. Either one-to-one, many-to-many, or one-to-many.  
+
+One-to-One: A person has only one driver license, and a driver license belongs to only one person.  
+One-to-Many: A car can only have one registered owner, but an owner can have many registered cars.  
+Many-to-Many: A film can have many actors, and an actor can be in many films.  
+
+__13. Explain what a relation is and cite the conditions that make one.__  
+
+Relation is always a table but a table is not always a relation. A relation:  
+- does not have a cell that has multivalued attributes  
+- does not have a row dependency  
+- does not have a domain violation  
+
+__14. Describe what is meant by ‘domain’ and provide an example. __  
+
+A data domain refers to all the values which a data element may contain. Determining the domain boundary can be as simple as a data type with an enumerated list of values.
+
+For example, a database table that has information about people, with one record per person, might have a "gender" column. This gender column might be declared as a string data type, and allowed to have one of two known code values: "M" for male, "F" for female—and NULL for records where gender is unknown or not applicable (or arguably "U" for unknown as a sentinel value). The data domain for the gender column is: "M", "F".
+
+__15. Explain what a constraint is and provide an example.__  
+
+Constraints are part of a database schema definition. A constraint is usually associated with a table and is created with a CREATE CONSTRAINT or CREATE ASSERTION SQL statement. They define certain properties that data in a database must comply with. Constraints enforce limits to the data or type of data that can be inserted/updated/deleted in a table. Helps maintain data integrity.
+
+http://stackoverflow.com/questions/2570756/what-are-database-constraints
+
+__16. Explain differences between composite, multi-valued and derived attributes and provide examples of each.__  
+
+A composite attribute has multiple components, or rather, multiple simple attributes. A complete name, such as "Kathryn Brusewitz", has composite attributes "Kathryn" and "Brusewitz". These composite attributes can be further divided into a tree like structure, so that each attribute has an independent existence on their own. Another example is an address. An address is a composite attribute, since it can be broken down into street, apartment or housing number, city, and state attributes.
+
+A multi-valued attribute has more than one value for each occurrence of an entity. Every occurrence of a student can have multiple values for a phone number attribute, since a student could have more than one phone number; thus, phone number attribute in this case is multi-valued. Another example can be TA's leading different lab-sections. A lab-section is a multi-valued attribute, since a TA could be leading more than one lab-section.
+
+A derived attribute can be obtained from the value of a related attribute or a set of attributes. The radius of a sphere, for example, can be derived from another attribute, the circumference. As another example, the age of a person can be derived from finding the difference between the current date and their birthdate. A derived attribute can also be calculated from counting the number occurrences of that entity. The number of staff can be derived from counting the total number of staff entity occurrences.
+
+Composite: More than one element (an address has a street number, house number, city, zipcode)  
+Multivalued: anything that is redundant therefore it has multiple values (phone number)  
+Derived: something that we calculate (age based off of birth date and current date)  
+
+__17. Explain decisions designers make in regards to establishing each primary key; what is the preferred data type and configuration settings? Why?__  
+
+Because it is possible for there to be more than one candidate key to be chosen to uniquely identify each occurrence of an entity type, a decision has to be made in regards to choosing which to establish as the primary key. As a general guideline, the designer then chooses the candidate key with: 1. the most minimal set of attributes; 2. values least likely to change; 3. the fewest characters; 4. the smallest maximum value; and 5. easiest usage for the user.
+
+A primary key with the most minimal set of attributes will have the most brief index entries. This is optimal, because the server can perform the lookups and comparisons much faster. The primary key should have values that do not change in the future, because if a primary key value is changed, then the associated foreign key values must be changed in many tables, otherwise the links built into the database will be lost. Additionally, the primary key should ideally have the fewest characters and smallest maximum value, as this makes it processing for the server easier and faster as well as makes joining tables and creating links easier for the user. Additionally, the ideal primary key has no embedded spaces, special characters, or differential capitalization, in order to ease difficulty and prevent user-errors. Finally, the designer should prefer fixed-length character over variable-length character data types because the server will need to use valuable processing power to decompress variable-length data before processing.
+
+__18. Explain what is meant by 'business rules' and provide an example.__  
+
+Business rules are also known as the constraints on the data that is to be stored in the database, which can be determined by considering the views of the data (or rather, policies) held by the organization. A database for properties may have the following business rules: a staff member cannot manage more than 50 properties at one time, and a solicitor cannot work for both the buyer and seller. Another example, for any general business, could have a business rule that states a staff member's salary must not be greater than $80,000 and no less than $30,0000. Such business rules specify conditions and relationships that must always be true or false. These rules are enforced by constraints on the data, so that all data in the table conforms to the business rule.
+
+In other words, business rules are essentially policies and conditions that the organization follows, and the constraints on the data reflect these business rules in order to keep the integrity of the data. Data integrity relies on the consistency of the data. If there are business rules that the database is not permitted to violate, data integrity stays intact and valid.
+
+These rules are intended to prevent disruption in a company or business. Usually business rules are used for the organization that stores or uses data to be an explanation of a policy, procedure, or principle. Business rules are restrictions. For example, a student cannot register for classes if they have too many parking tickets.
+
+__19. Explain the use of a sub-query; which clauses/statements can a sub-query be used?__  
+
+A sub-query is simply a complete SELECT statement inside a SELECT, INSERT, UPDATE, or DELETE statement, or inside another sub-query. More specifically, a sub-query can be inside the WHERE and HAVING clauses of a SELECT statement. The results of the sub-query is used in the outer SELECT statement, as a condition to further filter the data to be retrieved.
+
+There are three types of sub-queries: scalar, row, and table. A scalar sub-query returns a single value. A row sub-query returns a single row (with multiple columns). A table sub-query returns one or more columns and multiple rows. Sub-queries provide an alternate and more readable way to perform operations that might otherwise need complex joins and unions.
+
+Subquery (a.k.a. Inner query or Nested query) is a query in a query. SQL subquery is usually added in the WHERE Clause of the SQL statement. Most of the time, a subquery is used when you know how to search for a value using a SELECT statement, but do not know the exact value in the database.
+
+Subqueries are an alternate way of returning data from multiple tables. Select, Insert, Update, Delete can be used with comparison operators (=, <, > etc)
+
+__20. Explain what is meant by 'data independence' and how relational database design addresses it.__  
+
+Data independence refers to the separation of the data descriptions from the applications. In other words, a change to the structure of the data or how the data is stored on disk, does not affect the applications that use the data in such a way that it requires substantial alteration. A relational database provides data independence by decomposing data into entities and relationships. So when a value changes, it only changes in one place.
+
+There are two kinds of data independence: Physical Data Independence and Logical Data Independence. The former states that physical changes, e.g. data structures, will not affect applications that depend on the database. As an example, originally the database used Hash Index, but for performance reasons, the database is switched to using a B-Tree Index instead. The application depends on this database does not need to change. The only change the user might see will be performance change. On the other hand, Logical Data Independence requires that logical changes, e.g. adding columns and rows, will not adversely affect applications that depend on the database.
+
+Final - Part A
+---
 
 10 questions drawn from the following:
 
 __1. Describe the components of the N-Tier application architecture.__
 
-Separating application components into separate tiers increases the maintainability and scalability of the application. It does this by enabling easier adoption of new technologies that can be applied to a single tier without the requirement to redesign the whole solution. In addition, n-tier applications typically store sensitive information in the middle-tier, which maintains isolation from the presentation tier. 
+Separating application components into separate tiers increases the maintainability and scalability of the application. It does this by enabling easier adoption of new technologies that can be applied to a single tier without the requirement to redesign the whole solution. In addition, n-tier applications typically store sensitive information in the middle-tier, which maintains isolation from the presentation tier.
 
-Early computers had 1-tier, client/server is 2-tier, and client/server/middle is 3-tier, where middle tier contains business logic so only valid requests are sent to the database. The better we understand the stack and the middle-tier, better we can support development. 
+Early computers had 1-tier, client/server is 2-tier, and client/server/middle is 3-tier, where middle tier contains business logic so only valid requests are sent to the database. The better we understand the stack and the middle-tier, better we can support development.
 
 __2. Explain what the instructor means by the phrase ‘organize or die’.__
 
@@ -129,7 +312,7 @@ Supertype - an entity type that has a relationship with one or more subtypes.
 Subtype - a subgroup of entities with unique attributes.
 
 
-A data model for PEOPLE. There can be a supertype entity of PEOPLE and its subtype entities can be vendor, customer, and employee. The PEOPLE entity can have attributes like Name, Address, and Phone, which are common to its subtypes. The entities employee, vendor, and customer can then have further unique attributes. 
+A data model for PEOPLE. There can be a supertype entity of PEOPLE and its subtype entities can be vendor, customer, and employee. The PEOPLE entity can have attributes like Name, Address, and Phone, which are common to its subtypes. The entities employee, vendor, and customer can then have further unique attributes.
 
 
 Supertypes and subtypes give a hierarchy to the data through generalization and specialization.
@@ -161,8 +344,8 @@ __10. Explain the major differences between scalability and high-availability; w
 Clustering for scalability versus clustering for high availability (HA). HA means that the application will be available without interruption.
 
 
-Scalability: 
-- ability of a system to provide throughput limited only by available hardware resources. 
+Scalability:
+- ability of a system to provide throughput limited only by available hardware resources.
 - a scalable system is one that can handle increasing numbers of requests without adversely affecting response time and throughput
 - vertical scaling: increasing cpu within one operating environment
 - horizontal scaling: leveraging multiple systems to work together in parallel
@@ -176,7 +359,7 @@ High Availability:
 __11. Explain the conditions that are required for a relation.__
 
 
-- A relation must have a primary key (either auto-numbered, single-field, or multiple-field with 2+ foreign keys). 
+- A relation must have a primary key (either auto-numbered, single-field, or multiple-field with 2+ foreign keys).
 - Fields must only contain one item of data to eliminate redundant data and to contain only data directly related to the primary key
 - Relate each field directly to the subject of the table
 - Don’t include derived or calculated data
@@ -212,9 +395,9 @@ A multiplicity is made up of a lower and an upper cardinality. A multiplicity te
 
 Degree: In every relationship how many entities are participating.
 
-Participation - Two types: total and partial. 
+Participation - Two types: total and partial.
 
-Total Participation: The participation of entity set E in a relationship set R is total if every entity in E participates in at least one relationship in R. 
+Total Participation: The participation of entity set E in a relationship set R is total if every entity in E participates in at least one relationship in R.
 
 Partial Participation: If only some entities in E participate in relationships in R, the participation of entity set E in relationship R is said to be partial.
 
@@ -282,7 +465,7 @@ For atomicity, if one part fails, the entire transaction fails and the database 
 __18. According to Connolly & Begg, what is the difference between a subquery and a join? Under what circumstances would you not be able to use a subquery?__
 
 
-Joins and subqueries are both used to combine data from different tables into a single result. 
+Joins and subqueries are both used to combine data from different tables into a single result.
 
 
 Subqueries can be used to return either a scalar (single) value or a row set.
@@ -290,7 +473,7 @@ Subqueries can be used to return either a scalar (single) value or a row set.
 
 Joins are used to return rows.
 
-Joins are advantageous over subqueries if the SELECT list in a query contains columns from more than one table. 
+Joins are advantageous over subqueries if the SELECT list in a query contains columns from more than one table.
 
 
 __19. Explain what is meant by 'write-ahead logging'. Which ACID principle is it enforcing?__
@@ -302,7 +485,7 @@ Write-ahead logging (WAL) is a family of techniques for providing atomicity and 
 All modifications are written to a log before they are applied. Usually both redo and undo information is stored in the log.
 
 
-The purpose of this can be illustrated by an example. Imagine a program that is in the middle of performing some operation when the machine it is running on loses power. Upon restart, that program might well need to know whether the operation it was performing succeeded, half-succeeded, or failed. 
+The purpose of this can be illustrated by an example. Imagine a program that is in the middle of performing some operation when the machine it is running on loses power. Upon restart, that program might well need to know whether the operation it was performing succeeded, half-succeeded, or failed.
 
 
 If a write-ahead log is used, the program can check this log and compare what it was supposed to be doing when it unexpectedly lost power to what was actually done. Based on this comparison, the program could decide to undo what it had started, complete what it had started, or keep things as they are.
@@ -383,8 +566,8 @@ OLAP:
 - Aggregated, historical data stored in a multi-dimensional schema (usually star schema)
 
 
-Part B
-===
+Final - Part B
+---
 
 Create the SQL queries based on the following questions and ERD:
 
@@ -416,7 +599,7 @@ SET @ContactID = (SELECT ContactID FROM CONTACT WHERE FirstName = @FirstName AND
 SET @IncidentTypeID = (SELECT IncidentTypeID FROM INCIDENT_TYPE WHERE IncidentTypeName = @IncidentTypeName)
 
 BEGIN Transaction
-  -- Insert a new row into INCIDENT 
+  -- Insert a new row into INCIDENT
   INSERT INTO INCIDENT (IncidentName, IncidentDate, IncidentTypeID, IncidentDescr)
   VALUES (@IncidentName, @IncidentDate, @IncidentTypeID, @IncidentDescr)
 
@@ -452,7 +635,7 @@ CREATE TABLE SCHOOL_TYPE
 __3. Write the code to create a computed column in SCHOOL that has the following:__  
 
 - Includes the use of a user-defined function
-- Tracks number of ‘student incidents’ (number of incidents that have involved students from each particular school) 
+- Tracks number of ‘student incidents’ (number of incidents that have involved students from each particular school)
 
 
 ```sql
@@ -475,7 +658,7 @@ RETURN @numOfIncidents
 END
 
 ALTER TABLE SCHOOL
-ADD TotalStudentIncidents INT 
+ADD TotalStudentIncidents INT
 AS (dbo.fnTotalStudentIncidents(SchoolName))
 ```
 
@@ -491,7 +674,7 @@ BEGIN
 
 DECLARE @RET INT = 0
 IF EXISTS (
-  SELECT * 
+  SELECT *
   FROM CONTACT C
   JOIN BOARD B ON C.ContactID = B.ContactID
   JOIN CONTACT_BOARD_POSITION CBP ON B.ContactID = CBP.ContactID
@@ -522,7 +705,7 @@ BEGIN
 DECLARE @RET INT = 0
 IF EXISTS (
   SELECT *
-  FROM EVENT E 
+  FROM EVENT E
   JOIN EVENT_TYPE ET ON E.EventTypeID = ET.EventTypeID
   WHERE ET.EventTypeName LIKE '%fundrais%'
   AND DATEPART(mm, E.EventDate) NOT LIKE '1'
