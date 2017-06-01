@@ -1,5 +1,5 @@
 [Git Guide](git.md)  
-[Weird Javascript](/weird-js)
+[Javascript](/weird-js)  
 [INFO 340 - Database (2016)](info-340.md)  
 [INFO 445 - Advanced Database (2017)](info-445.md)  
 [CS 211 - Java (2014)](/cs-211)  
