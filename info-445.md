@@ -1333,7 +1333,59 @@ CHECK ([dbo].[CheckWinterClassesAreFree]())
 Create at least one stored procedure that calls a second stored procedure ('nested' stored procedures) leveraging OUTPUT parameter
 
 ```sql
-[in progress]
+CREATE PROCEDURE uspGetManufacturerID
+@MFG_Name varchar(30)
+@MFG_Address varchar(50)
+@MFG_ID int OUTPUT
+AS
+SET @MFG_ID = (
+  SELECT MFG_ID FROM MANUFACTURER
+  WHERE MFG_Name = @MFG_Name
+  AND MFG_Address = @MFG_Address
+)
+
+CREATE PROCEDURE uspGetPlaneTypeID
+@PlaneTypeName varchar(30)
+@PlaneTypeID int OUTPUT
+AS
+SET @PlaneTypeID = (
+  SELECT PlaneTypeID
+  FROM PLANE_TYPE
+  WHERE PlaneTypeName = @PlaneTypeName
+)
+
+CREATE PROCEDURE uspRegisterNewPlane
+@PlaneName varchar(30)
+@PlaneDescr varchar(120)
+@PlaneTypeName varchar(30)
+@MFG_Name varchar(30)
+@MFG_Address varchar(50)
+AS
+DECLARE @MFG_ID int
+DECLARE @PlaneTypeID int
+
+EXEC uspGetManufacturerID
+@MFG_Name = @MFG_Name
+@MFG_Address = @MFG_Address
+@MFG_ID = @MFG_ID OUTPUT
+IF @MFG_ID IS NULL
+  RAISERROR ('@MFG_ID cannot be null; check spelling', 12, 1)
+
+EXEC uspGetPlaneTypeID
+@PlaneTypeName = @PlaneTypeName
+@PlaneTypeID = @PlaneTypeID OUTPUT
+IF @PlaneTypeID IS NULL
+  RAISERROR ('@PlaneTypeID cannot be null; check spelling', 12, 1)
+
+-- insert new row into PLANE
+BEGIN RegisterNewPlane
+  INSERT INTO PLANE(PlaneName, PlaneDescr, MFG_ID, PlaneTypeID)
+  VALUES(@PlaneName, @PlaneDescr, @MFG_ID, @PlaneTypeID)
+  
+  IF @@ERROR <> 0
+    ROLLBACK RegisterNewPlane
+  ELSE
+    COMMIT RegisterNewPlane
 ```
 
 Create at least one complex view (multiple JOINs, GROUP BY, HAVING, CASE)
