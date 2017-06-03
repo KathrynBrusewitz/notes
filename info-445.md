@@ -881,3 +881,383 @@ END;
 ALTER TABLE EMPLOYEE
 ADD NumOfQualifications AS [dbo].[fnGetNumberOfQualifications](EmployeeID)
 ```
+
+Final
+===
+__1. Describe the four different types of table growth patterns and maintenance concerns associated with each.__
+
+- Continuous growth
+  - High volume of INSERT activity
+  - Few DELETES
+  - Value of data wanes with age
+    - Because newest rows are "hottest", good performance occurs if indexing strategy avoids older rows
+    - Clustered index on sequential value (PK or timestamp)
+  - A query that touches most rows before filter
+    - Performance will degrade over time
+    - Great for archival of derelict rows
+  - Top rows are best to cache
+  - Degrades in performance over time - queries could be based on anything besides sequential
+
+- Purge Eldest
+  - Oldest rows are deleted consistently
+  - Maintains sequential order but has potential gap
+    - Because there can be retention of a few of the oldest rows or a growth rate that exceeds the purge rate, it will gradually mix old and new rows
+  - Because table growth halts when purging begins, the whole table has a better chance to be well-cached
+    - Able to keep in cache more easily
+
+- Purge Not-by-Age
+  - Rows are DELETED by criteria other than age
+  - Scatters new rows with potential gaps
+  - Difficult to keep in cache
+
+- Complete Purge and Regrowth
+  - Similar to continuous growth
+  - Must maintain gaps with truncate/drop and recreate
+  - Potential for huge performance drag if not watched
+
+__2. Normalization seeks to eliminate several different types of data anomalies; please identify what these data anomalies are and how normalization can eliminate them.__
+
+Imagine an un-normalized Student Table with dorm information inside it (DormName and RoomStyle). Having such an un-normalized table can bring up the following anomalies:
+
+Insertion anomaly: We can't insert a new dorm without a student associated with that dorm. We may have a brand new dorm without any students living in it yet.
+
+Deletion anomaly: We can't delete data that without deleting other data that we might want to keep. If we delete a student, we can lose information about a dorm if that student was the only student living in that dorm.
+
+Update anomaly: If there was an error in RoomStyle (such as a misspelling or no longer offered or changed name), we may have to update hundreds of students and that would be a hassle.
+
+The solution to avoid these anomalies would be to normalize Student table by creating a separate table (Dorm) for dorms and an associative entity (Student_Dorm) to keep history.
+
+Normalization helps ensure there is no redundant data, which can cause the above anomalies.
+
+__3. Describe the differences between full, differential and transaction log back-ups and provide an example of a disaster recovery strategy that uses all three types of backups.__
+
+A full backup contains all the data in a database. It is the base of both differential backup and transaction log backup.
+
+A differential backup is not independent. It is based on the latest full backup of the data. A differential is only the full backup plus whatever changes have happened since the full backup and up to the differential. Differential backups are smaller and faster to create. Log sequence number tells us which differential backup belongs to a full backup.
+
+Transaction log backups gives you a point-in-time recovery. They do include changes after the differential. It is a serial record of all the transactions that have been performed since the last transaction log backup. Transaction log backups can be used to recover the database to a specific point in time. An uninterrupted sequence of log backups contains the complete log chain of the database. Take these every 15 minutes, so we could restore to a point in time.
+
+Full backup once a week. Differential backup every night. Transactional log backup every 15 minutes.
+
+Lets say on a Sunday at 3 PM you do a full backup.
+Lets say each weekday you do a Differential Backup at 3 am.
+Lets say each hour on a weekday you do a log backup between 6 am and 9pm (working hours).
+
+If you have a database failure at 12:30 pm on Monday you will need to in order...
+
+1. Restore Sunday 3PM full,
+2. Restore Monday 3AM differential.
+3. Every log backup from 6 am till midday Monday.
+
+The amount of loss of data is midday to 12:30 Monday
+
+__4. Describe the steps presented in lecture in performing proper database troubleshooting.__
+
+- Communicate
+  - Notify chain of possible performance issues
+  - Be factual but relatively vague
+  - Give ETA for next update
+    - 10 minutes for first update
+    - Every 30 minutes until resolved
+  
+- Validate issue
+  - Until validated issue is only a rumor
+  - Validate health of database
+    - Find blocked spids with activity monitor
+    - Check CPU and memory with the task manager
+    - Check SQL error logs and server system logs
+  - Verify user experience
+    - Execute with scripts (no GUI)
+  - Delegate tasks to others
+
+- Define scope of issue
+  - What applications are not performing well?
+  - What are the symptoms?
+  - When did this begin?
+  - What tables are impacted in the database?
+  - Which objects touch these tables?
+  - What jobs and queries are currently running?
+  - Any open transactions?
+
+- Define recent changes to environment
+  - What maintenance tasks happened recently?
+  - Any schema changes or deployments?
+    - Dropped indexes, file groups or partitions?
+  - Any DELETEs or significant data archiving?
+    - Run UPDATE STATISTICS against affected tables
+  
+- Compare to historical baselines
+  - Where is the system behaving poorly?
+  - If not obvious, look at middle-tier or app layer
+  - Are all web-boxes performing well?
+  - Send through a synthetic transaction
+
+__5. Describe the differences between Online Transaction Processing (OLTP) databases and those that are supporting Data Warehousing or Online Analytical Processing (OLAP).__
+
+OLTP:
+  - High number of short online transactions (INSERT UPDATE DELETE)
+  - Very fast query processing
+  - Effectiveness is measured by number of transactions per second
+  - Detailed and current data
+
+OLAP:
+  - Low number of transactions
+  - Queries are often complex and may be thousands/millions of rows
+  - Effectiveness is measured by response time
+  - Aggregated, historical data
+
+__6. Describe the aspects of a database environment that are considered critical for a database administrator to have deep knowledge on.__
+
+- Know hardware
+- Know stored procedures available
+- Know database objects
+- Know the customer/stakeholder
+- Be able to leverage multiple tools
+- Be aware of co-worker skills
+- Have baselines available
+  - Able to identify trends and avert problems
+- Know symptoms of each resource bottleneck
+- Know various tools for measuring performance
+- Know where to get help
+
+__7. Describe the preparations a database administrator must take to reduce the risk of data loss.__
+
+- Frequent backups. All three types of backups
+- Know when peak transactions occur
+- Use synchronous data transfers so we can have the exact identical dataset on the other server, which lets us do automatic failover
+
+__8. Name four Dynamic Management Views (DMVs) presented in lecture and describe their use.__
+
+- sys.dm_exec_cached_plans - Cached query plans available to SQL Server
+- sys.dm_exec_sessions - Sessions in SQL Server
+- sys.dm_exec_connections - Connections to SQL Server
+- sys.dm_db_index_usage_stats - Seeks, scans, lookups per index
+- sys.dm_io_virtual_file_stats - IO statistics for databases and log files
+- sys.dm_tran_active_transactions - Transaction state for an instance of SQL Server
+- sys.dm_exec_sql_text - Returns TSQL code
+- sys.dm_exec_query_plan - Returns query plan
+- sys.dm_os_wait_stats - Returns information what resources SQL is waiting on
+- sys.dm_os_performance_counters - Returns performance monitor counters related to SQL Server
+
+__9. Explain what is meant by 'Fault-Tolerance' and identify three system component examples.__
+
+Fault tolerance is the ability of the system to continue operating in the event of component failure. 
+
+- Symmetric CPU processing
+  - provides cost-effective ways to increase throughput, therefore increasing performance
+  - SMP can apply multiple processors to one problem/task
+  - Different programs can run on different CPUs simultaneously.
+- All implementations of RAID, redundant array of independent disks, except RAID 0, are examples of a fault-tolerant storage device that uses data redundancy.
+- Redundant power supplies
+
+__10. Describe the differences between the various types of indexes presented during lecture.__
+
+Two types of indexes: Clustered vs non-clustered. 
+
+A clustered index describes the order in which records are physically stored on the disk, hence the reason you can only have one. A Non-Clustered Index defines a logical order that does not match the physical order on disk. 
+
+Clustered Index
+- Only one per table
+- Clustered indexes physically order the data on the disk
+- Faster to read than non-clustered indexes because they are in sequential order
+- Usually made on the primary key because it is the most used unique column
+- Data insertion is slowed down because the physical order of the records may to be modified if the new keys are not in sequential order
+
+Non-Clustered Index
+- Can be used many times per table
+- Does not affect the physical order
+- Instead, it creates a logical order for data rows and uses pointers to physical data files
+- Data insertion/update is faster than clustered index
+- Uses extra space to store logical structure
+
+__11. ** skipped **__
+
+__12. Describe 5 different SQL commands that are considered ‘control of flow’ language.__
+
+BEGIN...END
+- BEGIN and END define a series of statements that execute together.
+
+BREAK
+- Exits the innermost loop in a WHILE statement or an IF...ELSE statement inside a WHILE loop.
+
+GOTO label
+- The statements after GOTO are skipped and processing continues at the label.
+
+CONTINUE
+- Restarts a WHILE loop. Any statements after the CONTINUE keyword are ignored.
+
+IF...ELSE
+- Imposes conditions on the execution of a statement block. If the condition is true, statements following IF... will be executed. If the condition is false, statements following the ELSE will be executed.
+
+WHILE
+- Sets a condition for the repeated execution of a statement block. The statements are executed repeatedly as long as the condition is true.
+
+RETURN
+- Exits unconditionally from a query or procedure. RETURN is immediate and can be used at any point to exit from a procedure, batch, or statement block. Statements that follow RETURN are not executed.
+
+WAITFOR
+- Blocks the execution of a batch, stored procedure, or transaction until a specified time or time interval is reached, or a specified statement modifies or returns at least one row.
+
+THROW
+- Raises an exception.
+
+TRY...CATCH
+- Implements error handling similar to C# and C++. If an error occurs in the TRY block, control is passed to another group of statements that is enclosed in a CATCH block.
+
+__13. Compare database mirroring, log shipping and replication; when is each the preferred tool of use?__
+
+Database Mirroring allows a database to mirror its data to another SQL Server thus providing redundancy. Best use of database mirroring is for databases that are considered mission-critical or otherwise cannot sustain significant downtime. Mirroring is synchronous; does not filter like replication.
+
+Database Mirroring Pros:
+- Mirroring can provide extremely High Availability
+- Automatic failover in case primary server crashes = no downtime
+- Flexibility in configuration
+- Provides redundancy at the database level
+
+Database Mirroring Cons:
+- Synchronous transactions can impact system performance
+- Have to create snapshots of the mirror database in order to get read access for reporting
+- Only committed transactions are transferred.
+
+Log Shipping allows a database to automatically send transaction log backups from a primary database on a primary server instance to one or more secondary databases on separate secondary server instances. Not filtered; exact copy of data. Read activity = shared lock. Write activity = exclusive lock (this will prevent all read activity. Use log shipping to create a copy so read activity could occur while write activity occurs on the other database.
+
+Log Shipping Pros:
+- Provides a disaster-recovery solution for a single primary database and one or more secondary databases
+- Provides additional redundancy to your backup strategy
+- Can use the secondary database for reporting purposes
+- Data can be copied on more than one location
+- All committed and un-committed transactions are transferred
+
+Log Shipping Cons:
+- Not used for high availability
+- Does not automatically failover from the primary server to the secondary server
+- Secondary database must be brought online manually
+- Need to manage all the databases separately
+- Secondary database isn't fully readable while the restore process is running
+
+Replication tracks and detects changes and ships the changes. Use replication to filter data on geographic data (send only data relevant to your location). Or, certain locations receive specific information based on their job function.
+
+Replication Pros:
+- Limit specific objects that are replicated to the subscriber. This can be useful if only a subset of tables is needed.
+- Gives ability to scale up.
+
+Replication Cons:
+- Replication is bound to database objects, so if you create a new object on the database it is not automatically added.
+
+__14. Describe the memory caching algorithm implemented by databases to improve performance.__
+
+Cache algorithms are optimizing algorithms that are used to manage a cache of information stored on the computer. When the cache is full, the algorithm must choose which items to discard to make room for the new ones. Cache is used because retrieving data from RAM is fast, retrieving data from disk is slow.
+
+Databases implement LRU (least recently used) algorithm. Discards the least recently used items first, and will keep frequently accessed data always in cache.
+
+__15. Explain the key characteristics of a database maintenance plan as presented in lecture.__
+
+- Know environment.
+- Assess risks.
+- Come up with risk mitigation plan.
+- Communicate it.
+- Write code to offset the risk and implement.
+- Practice it and measure the effectiveness.
+
+__16. Define the different data warehouse design structures:  star schema, snowflake schema, ‘star flake’ schema, fact table, dimension table in addition to a ‘measure’.__
+
+Star Schema: A central table (Fact Table) contains fact data. Multiple tables (Dimension Tables) radiate out from it. They are connected by the primary and foreign keys of the database.
+
+![Star Schema](https://www.tutorialspoint.com/dwh/images/start_schema.jpg)
+
+Snowflake Schema: Like the star schema, but is further normalized into sub-dimension tables.
+
+![Snowflake Schema](https://www.tutorialspoint.com/dwh/images/snowflake.jpg)
+
+Star Flake Schema: Like the snowflake schema, but only some dimension tables have been denormalized.
+
+Fact Table: Contains fact data, which are measurable, quantitative data. Contains foreign keys of its dimensions.
+
+Dimension table: Contains a set of attributes, which are descriptive attributes related to fact data. Connects with the Fact Table through its primary key.
+
+Measure: Fact tables record measurements for a specific event. A measure is something that can be used in calculations and analysis.
+
+__17. ** skipped **__
+
+__18. ** skipped **__
+
+__19. Compare the differences between RAID 0, RAID 1, RAID 5 and RAID 0 + 1 or RAID ‘Ten’ **__
+
+RAID 0 has parallel writes, not parallel reads. Once there are two copies of the data, there can be parallel reads. This gives scalability at the disk level. RAID 0 is fast and has great disk cost-efficiency in both read and write operations. This is because there is no overhead caused by parity controls. RAID 0 uses striping, meaning data is split into blocks written across all the drives. However, it is not fault-tolerant. If one drive fails, all data in the drive array is lost.
+
+RAID 1 has mirroring, meaning data is stored twices by writing them to both the drive and mirror drive(s). Its performance in reads and writes are still good but it has better fault tolerance than RAID 0. However, because data is written twice, cost-efficiency in storage capacity is halved.
+
+RAID 5 has both parity and striping, where each disk has parity. Reads are still fast, but writes are slower due to the parity that has to be calculated. The advantage is if one drive fails, you still have access to all data.
+
+RAID 1+0 has mirroring and striping. It is similar to RAID 1 in that half the storage capacity has to be dedicated to mirroring (so its less cost-efficient that way); but because it is mirrored AND striped across multiple drives, if a drive fails, rebuild time is very fast as it just needs to copy data from the mirror.
+
+__20. Explain the differences between a Data Warehouse and a Data Mart.__
+
+Data Warehouse:
+  - Holds multiple subject areas
+  - Holds very detailed information
+  - Works to integrate all data sources
+  - Does not necessarily use a dimensional model but feeds dimensional models
+
+Data Mart:
+  - Often holds only one subject area - for example, finance or sales
+  - May hold more summarized data
+  - Concentrates on integrating information from a given subject area or set of source systems
+  - Is built focused on a dimensional model using a star schema
+
+ETL (Extract, Transform, Load) is the process of getting data from one data storage method into another. ETL usually depends on data pipelines provided by third parties. Data Warehouse/Data Mart is the place where data is stored for analysis/reporting.
+
+__21. Compare asynchronous communications versus synchronous; which is preferred to reduce risk of data loss?__
+
+Synchronous
+  - Communications are serial
+  - Transactions wait for commit confirmation: 2-phased commit
+  - Care about data loss
+
+Asynchronous
+  - Communications are parallel
+  - Transactions do not wait for commit confirmation
+  - Speed is more important than accuracy
+
+__22. Name four monitoring tools presented in lecture and identify the best-use of each.__
+
+
+First tools used in troubleshooting and if we have knowledge of baseline performance. Quick glance into overall health of system. Should see anything obvious in under 1 minute. See abnormally high use of resources or connections:
+- Activity monitor
+  - Check if there is a waiting task
+  - Check which process is taking up most of the CPU
+  - Check if there is a spid blocking: find root blocker, look at details, take screenshot, then kill it
+  - Right click to see the details: tells us what the code is being run for that process
+  - No blocks could mean a healthy database; however, might not see slowed down processes
+  - Communicate if there are or aren't waiting tasks and spids being blocked
+- Task manager
+  - See system resources: CPU, Memory, Ethernet
+  - See spikes and utilization of system resources
+  - See who is connected and how much they utilize system resources
+  - Good tool to check if complaint is "slow performance"
+
+Best when specific performance symptoms are found. Or, in the absence of seeing anything obvious in the high-level, might have to do a trace. May not have knowledge of baseline levels. Should be able to uncover anything abnormal:
+- SQL Profiler
+  - Good for low-level tracing
+  - Trace to a particular group of people, processes, hardware, etc.
+  - Have to filter based on that group; otherwise, it will return millions of rows
+- System monitor (Perfmon)
+  - Shows activity of chosen counters
+  - Don't use chart, use numbers
+  - Counters could be very specific
+  - Used to measure and record a baseline
+  - Good for learning about the environment
+- Dynamic Management Views
+  - Gives insight into the database engine
+  - Lets us write a WHERE clause to filter what we want to see
+
+__23. ** skipped **__
+
+ERD
+---
+- Create at least one stored procedure that takes in several parameters of friendly names and INSERTs into multiple tables in an explicit transaction with proper error-handling
+- Create at least one business rule or computed column leveraging a function
+- Create at least one stored procedure that calls a second stored procedure ('nested' stored procedures) leveraging OUTPUT parameter
+- Create at least one complex view (multiple JOINs, GROUP BY, HAVING, CASE)
+
+![Info 445 Final ERD](img/info445-final-erd.png)
