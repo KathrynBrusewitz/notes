@@ -1255,9 +1255,73 @@ __23. ** skipped **__
 
 ERD
 ---
-- Create at least one stored procedure that takes in several parameters of friendly names and INSERTs into multiple tables in an explicit transaction with proper error-handling
-- Create at least one business rule or computed column leveraging a function
-- Create at least one stored procedure that calls a second stored procedure ('nested' stored procedures) leveraging OUTPUT parameter
-- Create at least one complex view (multiple JOINs, GROUP BY, HAVING, CASE)
+Create at least one stored procedure that takes in several parameters of friendly names and INSERTs into multiple tables in an explicit transaction with proper error-handling
+
+```sql
+CREATE PROCEDURE uspRegisterNewStudentExistingClass
+@StudentFname varchar(30)
+@StudentLname varchar(30)
+@StudentDOB date
+@ClassName varchar(30)
+@ClassYear int
+@CourseName varchar(30)
+@QuarterName varchar(15)
+@InstrFname varchar(30)
+@InstrLname varchar(30)
+@InstrDOB date
+AS
+DECLARE @StudentID int
+DECLARE @ClassID int
+SET @ClassID = (SELECT ClassID FROM CLASS C
+  JOIN INSTRUCTOR I ON C.InstructorID = I.InstructorID
+  JOIN QUARTER Q ON C.QuarterID = Q.QuarterID
+  JOIN COURSE CRS ON C.CourseID = CRS.CourseID
+  WHERE I.InstrFname = @InstrFname
+  AND I.InstrLname = @InstrLname
+  AND I.InstrDOB = @InstrDOB
+  AND Q.QuarterName = @QuarterName
+  AND CRS.CourseName = @CourseName
+  AND C.ClassYear = @ClassYear
+  AND C.ClassName = @ClassName
+)
+IF @ClassID IS NULL
+BEGIN
+  PRINT 'ClassID is null. Check spelling'
+  RAISERROR('ClassID cannot be null. Check spelling', 12, 1)
+END
+
+BEGIN RegisterNewStudentExistingClass
+  -- insert new row into Student
+  INSERT INTO STUDENT (StudentFname, StudentLname, StudentDOB)
+  VALUES (@StudentFname, @StudentLname, @StudentDOB)
+  SET @StudentID = SCOPE_IDENTITY()
+  
+  -- insert new row in CLASS_LIST with ClassID and StudentID
+  INSERT INTO CLASS_LIST (ClassID, StudentID, RegistrationDate)
+  VALUES (@ClassID, @StudentID, GETDATE())
+
+  IF @@ERROR <> 0
+    ROLLBACK RegisterNewStudentExistingClass
+  ELSE
+    COMMIT RegisterNewStudentExistingClass
+```
+
+Create at least one business rule or computed column leveraging a function
+
+```sql
+[in progress]
+```
+
+Create at least one stored procedure that calls a second stored procedure ('nested' stored procedures) leveraging OUTPUT parameter
+
+```sql
+[in progress]
+```
+
+Create at least one complex view (multiple JOINs, GROUP BY, HAVING, CASE)
+
+```sql
+[in progress]
+```
 
 ![Info 445 Final ERD](img/info445-final-erd.png)
