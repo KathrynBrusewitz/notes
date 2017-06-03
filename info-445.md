@@ -1391,7 +1391,16 @@ BEGIN RegisterNewPlane
 Create at least one complex view (multiple JOINs, GROUP BY, HAVING, CASE)
 
 ```sql
-[in progress]
+CREATE VIEW AS
+(
+  SELECT P.PlaneName, Count(F.FlightID) AS NumOfFlights
+  CASE WHEN P.PlaneDescr IS NULL THEN 'no' ELSE 'yes' END AS HasDescr
+  FROM PLANE P
+  JOIN FLIGHT F ON P.PlaneID = F.PlaneID
+  WHERE F.FlightEnd < GETDATE()
+  GROUP BY P.PlaneName
+  HAVING Count(F.FlightID) > 10
+)
 ```
 
 ![Info 445 Final ERD](img/info445-final-erd.png)
