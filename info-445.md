@@ -1309,7 +1309,25 @@ BEGIN RegisterNewStudentExistingClass
 Create at least one business rule or computed column leveraging a function
 
 ```sql
-[in progress]
+CREATE FUNCTION [dbo].[CheckWinterClassesAreFree]()
+RETURNS int
+AS
+BEGIN
+  DECLARE @Ret int = 0
+  IF EXISTS (
+    SELECT * FROM CLASS C
+    JOIN QUARTER Q ON C.QuarterID = Q.QuarterID
+    WHERE Q.QuarterName = 'Winter'
+    AND C.Tuition <> 0
+  )
+  SET @Ret = 1
+  RETURN @Ret
+END;
+
+ALTER TABLE CLASS
+ADD CONSTRAINT chkWinterClassesAreFree
+CHECK ([dbo].[CheckWinterClassesAreFree]())
+-- If it fails, that means there is a paid winter class
 ```
 
 Create at least one stored procedure that calls a second stored procedure ('nested' stored procedures) leveraging OUTPUT parameter
