@@ -1259,15 +1259,15 @@ Create at least one stored procedure that takes in several parameters of friendl
 
 ```sql
 CREATE PROCEDURE uspRegisterNewStudentExistingClass
-@StudentFname varchar(30)
-@StudentLname varchar(30)
-@StudentDOB date
-@ClassName varchar(30)
-@ClassYear int
-@CourseName varchar(30)
-@QuarterName varchar(15)
-@InstrFname varchar(30)
-@InstrLname varchar(30)
+@StudentFname varchar(30),
+@StudentLname varchar(30),
+@StudentDOB date,
+@ClassName varchar(30),
+@ClassYear int,
+@CourseName varchar(30),
+@QuarterName varchar(15),
+@InstrFname varchar(30),
+@InstrLname varchar(30),
 @InstrDOB date
 AS
 DECLARE @StudentID int
@@ -1355,10 +1355,10 @@ SET @PlaneTypeID = (
 )
 
 CREATE PROCEDURE uspRegisterNewPlane
-@PlaneName varchar(30)
-@PlaneDescr varchar(120)
-@PlaneTypeName varchar(30)
-@MFG_Name varchar(30)
+@PlaneName varchar(30),
+@PlaneDescr varchar(120),
+@PlaneTypeName varchar(30),
+@MFG_Name varchar(30),
 @MFG_Address varchar(50)
 AS
 DECLARE @MFG_ID int
