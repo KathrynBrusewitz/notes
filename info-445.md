@@ -999,12 +999,24 @@ OLTP:
   - Very fast query processing
   - Effectiveness is measured by number of transactions per second
   - Detailed and current data
+  - Many users
+  - Live data
+  - Write-centric
+  - Operational
+  - Relational
+  - 3NF
 
 OLAP:
   - Low number of transactions
   - Queries are often complex and may be thousands/millions of rows
   - Effectiveness is measured by response time
   - Aggregated, historical data
+  - Few users, usually internal
+  - Dead data
+  - Read-centric
+  - Analytical
+  - Dimensional
+  - Denormalized
 
 __6. Describe the aspects of a database environment that are considered critical for a database administrator to have deep knowledge on.__
 
