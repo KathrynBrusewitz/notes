@@ -1210,13 +1210,26 @@ __18. ** skipped **__
 
 __19. Compare the differences between RAID 0, RAID 1, RAID 5 and RAID 0 + 1 or RAID ‘Ten’ **__
 
-RAID 0 has parallel writes, not parallel reads. Once there are two copies of the data, there can be parallel reads. This gives scalability at the disk level. RAID 0 is fast and has great disk cost-efficiency in both read and write operations. This is because there is no overhead caused by parity controls. RAID 0 uses striping, meaning data is split into blocks written across all the drives. However, it is not fault-tolerant. If one drive fails, all data in the drive array is lost.
+RAID 0: striping
+  fast and great disk cost-efficiency
+  no overhead by parity controls
+  data is split into blocks written across all the drives
+  not fault-tolerant: if one drive fails, all data in the drive array is lost
 
-RAID 1 has mirroring, meaning data is stored twices by writing them to both the drive and mirror drive(s). Its performance in reads and writes are still good but it has better fault tolerance than RAID 0. However, because data is written twice, cost-efficiency in storage capacity is halved.
+RAID 1: mirroring
+  data is stored twice: on the drive and mirror drive
+  better fault tolerance than RAID 0
+  cost-efficiency in storage is halved
 
-RAID 5 has both parity and striping, where each disk has parity. Reads are still fast, but writes are slower due to the parity that has to be calculated. The advantage is if one drive fails, you still have access to all data.
+RAID 5: parity and striping
+  each disk has parity
+  reads are still fast, but writes are slower due to the parity that has to be calculated
+  if one drive fails, you still have access to all data
 
-RAID 1+0 has mirroring and striping. It is similar to RAID 1 in that half the storage capacity has to be dedicated to mirroring (so its less cost-efficient that way); but because it is mirrored AND striped across multiple drives, if a drive fails, rebuild time is very fast as it just needs to copy data from the mirror.
+RAID 10: mirroring and striping
+  and each data is split into blocks written across all the drives
+  half the storage capacity is used for mirroring
+  if a drive fails, rebuild time is quick because it just needs to copy data from a mirror
 
 __20. Explain the differences between a Data Warehouse and a Data Mart.__
 
