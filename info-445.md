@@ -1060,12 +1060,22 @@ __9. Explain what is meant by 'Fault-Tolerance' and identify three system compon
 
 Fault tolerance is the ability of the system to continue operating in the event of component failure. 
 
-- Symmetric CPU processing
-  - provides cost-effective ways to increase throughput, therefore increasing performance
-  - SMP can apply multiple processors to one problem/task
-  - Different programs can run on different CPUs simultaneously.
-- All implementations of RAID, redundant array of independent disks, except RAID 0, are examples of a fault-tolerant storage device that uses data redundancy.
-- Redundant power supplies
+Symmetric Multiprocessing (SMP)
+- processors run independently of each other
+- each processor executes different programs and works on different sets of data
+- can apply multiple processors to one problem/task
+- cost-effective way to increase throughput, therefore increases performance 
+
+RAID (Redundant Array of Independent Disks)
+- uses data redundancy to provide good protection against and recovery from hardware defects or read errors
+- does not provide protection against data loss due to catastrophic failures or user errors
+- employs techniques of striping, mirroring or parity
+- used to create large reliable data stores from multiple hard disk drives
+  - RAID 0 = striping
+  - RAID 1 = mirroring
+  - RAID 5 = parity
+
+Redundant power supplies
 
 __10. Describe the differences between the various types of indexes presented during lecture.__
 
