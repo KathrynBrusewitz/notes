@@ -1039,6 +1039,11 @@ __8. Name four Dynamic Management Views (DMVs) presented in lecture and describe
 - sys.dm_os_wait_stats - Returns information what resources SQL is waiting on
 - sys.dm_os_performance_counters - Returns performance monitor counters related to SQL Server
 
+- sys.dm_db_* - range of database statistics (space and index utilization)
+- sys.dm_exec_* - range of query statistics (replaces 'old school' code sp_who2 and sp_lock)
+- sys.dm_io_* - range of i/o statistics (current data previously required system monitor)
+- sys.dm_os_* - range of hardware-level information (very effective measurements)
+
 __9. Explain what is meant by 'Fault-Tolerance' and identify three system component examples.__
 
 Fault tolerance is the ability of the system to continue operating in the event of component failure. 
