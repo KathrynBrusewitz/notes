@@ -26,6 +26,8 @@ describe("LockScreen", () => {
     mountedLockScreen = undefined;
   });
 
+  // All tests will go here
+
   it("always renders a div", () => {
     const divs = lockScreen().find("div");
     expect(divs.length).toBeGreaterThan(0);
