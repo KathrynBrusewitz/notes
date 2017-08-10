@@ -13,3 +13,4 @@ I borrowed this idea from [jbranchaud/til](https://github.com/jbranchaud/til).
 [CS 211 - Java (2014)](/cs-211)  
 [PROG 111 - C++ (2013)](/prog-111)  
 [React Testing Example with Jest and Enzyme](/react-testing-example-lockscreen)  
+[Should you store your form state in Redux?](https://goshakkk.name/should-i-put-form-state-into-redux/)
