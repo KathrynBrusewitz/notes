@@ -74,11 +74,11 @@ posterior = likelihood x prior
 The average likelihood, Pr(w), can be confusing. It is commonly called the “evidence” of the “probability of the data.”
 
 ## Grid Approximation
-(1)Define the grid. This means you decide how many points to use in estimating the posterior, and then you make a list of the parameter values on the grid.
-(2)Compute the value of the prior at each parameter value on the grid.
-(3)Compute the likelihood at each parameter value.
-(4)Compute the unstandardized posterior at each parameter value, by multiplying the prior by the likelihood.
-(5)Finally, standardize the posterior, by dividing each value by the sum of all values. In the globe tossing context, here's the code to complete all five of these steps:
+(1) Define the grid. This means you decide how many points to use in estimating the posterior, and then you make a list of the parameter values on the grid.  
+(2) Compute the value of the prior at each parameter value on the grid.  
+(3) Compute the likelihood at each parameter value.  
+(4) Compute the unstandardized posterior at each parameter value, by multiplying the prior by the likelihood.  
+(5) Finally, standardize the posterior, by dividing each value by the sum of all values. In the globe tossing context, here's the code to complete all five of these steps:  
 
 ```
 # define grid
