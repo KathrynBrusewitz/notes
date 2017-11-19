@@ -491,3 +491,57 @@ ggplot(sim5, aes(x, y)) +
 Notice that the extrapolation outside the range of the data is clearly bad. This is the downside to approximating a function with a polynomial.
 
 But this is a very real problem with every model. The model can never tell you if the behavior is true when you start extrapolating outside the range of the data that you have seen. You must rely on theory and science.
+
+## Questions
+
+Instead of using lm() to fit a straight line, you can use loess() to fit a smooth curve. Repeat the process of model fitting, grid generation, predictions, and visualisation on sim1 using loess() instead of lm(). How does the result compare to geom_smooth()?
+
+```{r}
+# Generate an evenly spaced grid of values that covers the region where our data lies.
+grid <- sim1 %>% 
+  data_grid(x) 
+
+sim1_mod2 <- loess(y ~ x, data = sim1)
+
+# Add the predictions from the model to a new column in the data frame.
+grid <- grid %>% 
+  add_predictions(sim1_mod2)
+
+# Plot the predictions
+ggplot(sim1, aes(x)) +
+  geom_point(aes(y = y)) +
+  geom_line(aes(y = pred), data = grid, colour = "red", size = 1)
+```
+
+```{r}
+ggplot(sim1, aes(x, y)) +
+  geom_point(size = 2, color = "grey30") +
+  geom_smooth(method = "loess", formula=y ~ x)
+```
+
+
+```{r}
+# Loess model residuals
+sim1_2 <- sim1 %>% 
+  add_residuals(sim1_mod2)
+```
+
+```{r}
+# Loess model residuals
+ggplot(sim1_2, aes(x, resid)) + 
+  geom_ref_line(h = 0) +
+  geom_point()
+```
+
+```{r}
+# Linear model residuals
+ggplot(sim1, aes(x, resid)) + 
+  geom_ref_line(h = 0) +
+  geom_point()
+```
+
+
+
+
+
+
