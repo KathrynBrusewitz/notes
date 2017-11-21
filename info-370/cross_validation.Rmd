@@ -1,0 +1,209 @@
+---
+title: "Building Basic Models"
+output: html_notebook
+---
+
+Adapted from (Cross-Validation for Predictive Analytics Using R)[http://r4ds.had.co.nz], Sergio Venturini
+
+# 0: Loading packages
+```{r setup}
+if(!require(tidyverse)){install.packages("tidyverse"); library(tidyverse)} 
+if(!require(modelr)){install.packages("modelr"); library(modelr)} # modeling package
+if(!require(splines)){install.packages("splines"); require(splines)} # for natural splines ("polynomial") models
+
+```
+
+# Looking at non-linear data
+
+## The Bias-Variance Dilemma
+Tuning parameter values are closely linked with the accuracy of the predictions returned by the model. A predictive model is considered good when it is capable of predicting previously unseen samples with high accuracy. This accuracy is usually gauged using a loss/objective function. Popular choices for the loss functions are the mean-squared error for continuous outcomes (AKA L2 norm), or the 0-1 loss for a categorical outcome.
+
+Two types of error:
+- The training error, which is the average error over the training set.
+- The test error, which is the prediction error over a test set which was not used for a model fitting.
+
+Generally, one should select the model corresponding to the lowest test error.
+
+# 1. Generating some non-linear data
+```{r}
+sim5 <- tibble(
+  x = seq(0, 3.5 * pi, length = 500),
+  y = 4 * sin(x) + rnorm(length(x))*2
+)
+
+# plotting random points
+ggplot(sim5, aes(x, y)) +
+  geom_point()
+```
+
+# 2. Fitting 30 models to tune a parameter
+```{r}
+n_df <- 30 # number of degrees of freedom to try out
+
+n_data <- nrow(sim5) 
+split <- 0.9 # proportion of data to use for training
+
+# getting split of data for training and test
+train_indices <- sample(seq(1, n_data), size = n_data*split) 
+
+train_data <- sim5[train_indices,]
+test_data <-  sim5[-train_indices,]
+
+results <- list()
+
+for(degf in 1:n_df) {
+  results[[degf]] <- lm(y ~ ns(x, df = degf), data=train_data)
+}
+
+# output for model of degree 1
+results[[1]]
+
+```
+
+# 3. Visualizing a few models over training and test data
+```{r}
+grid_train <- train_data %>%
+  data_grid(x) %>%
+  gather_predictions(results[[1]], results[[6]], results[[30]], .pred="y")
+
+ggplot(train_data, aes(x,y)) +
+  geom_point(size=0.5) + 
+  geom_line(data = grid_train, aes(color = model), size=1) + 
+  labs(title="Natural spline ('polynomial') models over training data")
+
+grid_test <- test_data %>%
+  data_grid(x) %>%
+  gather_predictions(results[[1]], results[[6]], results[[30]], .pred="y")
+
+ggplot(test_data, aes(x,y)) +
+  geom_point() + 
+  geom_line(data = grid_test, aes(color = model), size=1) + 
+  labs(title="Natural spline ('polynomial') models over test data")
+```
+
+
+# 4 Determine training and test error
+```{r}
+# mean squared errors for training and test sets
+mse_train <- list() 
+mse_test <- list()
+
+for (i in 1:n_df) {
+  predict_train <- train_data %>% gather_predictions(results[[i]])
+  squared_error_train <- mapply(function(actual, pred) (actual-pred)^2, 
+                                train_data$y, predict_train$pred)
+  mse_train[i] <- mean(squared_error_train)
+  
+  predict_test <- test_data %>% gather_predictions(results[[i]])
+  squared_error_test <- mapply(function(actual, pred) (actual-pred)^2, 
+                               test_data$y, predict_test$pred)
+  mse_test[i] <- mean(squared_error_test)
+}
+
+mse_data <- data.frame(x=1:length(mse_train), train_error=unlist(mse_train), test_error=unlist(mse_test))
+
+# 5 plots with lowest test_error. Looks like df = 6 reduces test error the most (may vary a bit depending on how data created)
+head(mse_data %>% arrange(test_error))
+
+ggplot(mse_data, aes(x)) + 
+  geom_line(aes(y=train_error, color="Training Error")) +
+  geom_line(aes(y=test_error, color="Test Error"), size=1) + 
+  labs(y = "Mean Squared Error", x = "degrees of freedom", title="Spline model performance") 
+```
+Mean squared error is the same as the (residuals)^2. 
+We can make the same plot again by using residuals. This makes the code a bit cleaner using `add_residuals()`
+
+# 5 Determine training and test error using residuals (cleaner code)
+```{r}
+# mean squared errors for training and test sets
+mse_train <- list() 
+mse_test <- list()
+
+for (i in 1:n_df) {
+  residuals_train <- train_data %>% add_residuals(results[[i]]) # calculating residuals
+  mse_train[i] <- mean(residuals_train$resid^2) # mean of square of residuals to get mean squared error
+  
+  residuals_test <- test_data %>% add_residuals(results[[i]])
+  mse_test[i] <- mean(residuals_test$resid^2)
+}
+
+mse_data <- data.frame(x=1:length(mse_train), train_error=unlist(mse_train), test_error=unlist(mse_test))
+
+ggplot(mse_data, aes(x)) + 
+  geom_line(aes(y=train_error, color="Training Error")) +
+  geom_line(aes(y=test_error, color="Test Error"), size=1) + 
+  labs(y = "Mean Squared Error", x = "degrees of freedom", title="Spline model performance") 
+```
+
+# Using caret package to automate cross-validation
+
+# 6 Loading caret package, data
+*THIS WILL TAKE AWHILE TO INSTALL*
+```{r}
+install.packages("DEoptimR")
+if(!require(caret)){install.packages("caret", dependencies = c("Depends", "Suggests")); require(caret)}
+
+if(!require(RCurl)){install.packages("RCurl"); require(RCurl)}
+if(!require(prettyR)){install.packages("prettyR"); require(prettyR)}
+
+url <- "https://raw.githubusercontent.com/gastonstat/CreditScoring/master/CleanCreditScoring.csv"
+cs_data <- getURL(url)
+cs_data <- read.csv(textConnection(cs_data))
+describe(cs_data)
+head(cs_data)
+```
+
+# 7 Splitting the data with `createDataPartition()`
+```{r}
+classes <- cs_data[, "Status"]
+predictors <- cs_data[, -match(c("Status", "Seniority", "Time", "Age", "Expenses", 
+    "Income", "Assets", "Debt", "Amount", "Price", "Finrat", "Savings"), colnames(cs_data))]
+ 
+train_set <- createDataPartition(classes, p = 0.8, list = FALSE)
+str(train_set)
+```
+
+#8 Creating training and test sets using `createFolds()`
+```{r}
+train_predictors <- predictors[train_set, ]
+train_classes <- classes[train_set]
+test_predictors <- predictors[-train_set, ]
+test_classes <- classes[-train_set]
+
+cv_splits <- createFolds(classes, k = 10, returnTrain = TRUE)
+str(cv_splits)
+```
+
+# 9 Fitting a models to tune parameters
+
+Be patient. Fitting this many models takes time!
+```{r}
+cs_data_train <- cs_data[train_set, ]
+cs_data_test <- cs_data[-train_set, ]
+ 
+glmnet_grid <- expand.grid(alpha = c(0,  .1,  .2, .4, .6, .8, 1),
+                           lambda = seq(.01, .2, length = 20))
+glmnet_ctrl <- trainControl(method = "cv", number = 10)
+glmnet_fit <- train(Status ~ ., data = cs_data_train,
+                    method = "glmnet",
+                    preProcess = c("center", "scale"),
+                    tuneGrid = glmnet_grid,
+                    trControl = glmnet_ctrl)
+glmnet_fit
+```
+
+#10: Visualizing Performance
+```{r}
+trellis.par.set(caretTheme())
+plot(glmnet_fit, scales = list(x = list(log = 2)))
+```
+
+#11. Predicting performance
+```{r}
+pred_classes <- predict(glmnet_fit, newdata = cs_data_test)
+table(pred_classes)
+
+pred_probs <- predict(glmnet_fit, newdata = cs_data_test, type = "prob")
+?predict
+head(pred_probs)
+```
