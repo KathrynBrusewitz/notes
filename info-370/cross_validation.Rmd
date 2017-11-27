@@ -20,7 +20,7 @@ Tuning parameter values are closely linked with the accuracy of the predictions 
 
 Two types of error:
 - The training error, which is the average error over the training set.
-- The test error, which is the prediction error over a test set which was not used for a model fitting.
+- The test error, which is the prediction error over a test set that was not used for model fitting.
 
 Generally, one should select the model corresponding to the lowest test error.
 
@@ -37,6 +37,14 @@ ggplot(sim5, aes(x, y)) +
 ```
 
 # 2. Fitting 30 models to tune a parameter
+We can fit this model using a spline, which is basically a polynomial. To tune the degree of the polynomial, think of a range of polynomials to look at, like degrees 1-30.
+
+We split the data so most of it (90% in this case) is used for fitting/training the model and the remaining pat is set aside for evaluating the model.
+
+Note that we want to split the data randomly. We do NOT just want to grab the first 90% of the data because that can introduce unintended bias.
+
+We then use the training data to fit a bunch of spline models with the degrees of freedom parameter varied for each model. Here, we specify a range of parameter values to investigate, split the data into training and test sets, and train a bunch of models (saved in the `results` variable).
+
 ```{r}
 n_df <- 30 # number of degrees of freedom to try out
 
@@ -61,6 +69,12 @@ results[[1]]
 ```
 
 # 3. Visualizing a few models over training and test data
+Once we fit the model, we can visualize them to make sure we fitted them correctly and gain intuition of where an optimal parameter may lie. 
+
+Here are models of degree 1, 6, and 30 and their predictions of the training and test data. These numbers were chosen to show the full set of possibilities that may be encountered in practice,
+
+i.e. either a model with low variability but high bias (degrees of freedom = 1), or a model with high variability but low bias (degrees of freedom = 30), or a model which tries to find a compromise between bias and variance (degrees of freedom = 6).
+
 ```{r}
 grid_train <- train_data %>%
   data_grid(x) %>%
@@ -83,6 +97,18 @@ ggplot(test_data, aes(x,y)) +
 
 
 # 4 Determine training and test error
+For each fitted model, we compute the training error and test error. Here, the very common mean-squared-error (L2 norm) is used, but other objective/loss functions could also be used.
+
+The figure below shows the training and test error for the spline models of varying degrees of freedom. 
+
+The error quickly decreases. The training error (blue) decreases monotonically as the model gets more complicated and less smooth. On the other hand, even though the test error (red) initially decreases, it starts increasing again at a certain flexibility level.
+
+The change point occurs around `df = 6`, which provides a good compromise between bias and variance for this dataset.
+
+The reason why the test error starts increasing for degrees of freedom larger than 6 or 7 is because of overfitting. Overfitting is the tendency of a model to adapt too well to the training data, at the expense of generalization to previously unseen data points.
+
+Basically, an overfitted model fits the noise in the data rather than the actual underlying relationships among the variables. Overfitting usually occurs when a model is unnecessarily complex.
+
 ```{r}
 # mean squared errors for training and test sets
 mse_train <- list() 
@@ -113,6 +139,25 @@ ggplot(mse_data, aes(x)) +
 Mean squared error is the same as the (residuals)^2. 
 We can make the same plot again by using residuals. This makes the code a bit cleaner using `add_residuals()`
 
+It is possible to show that the (expected) test error for a given observation in the test set can be decomposed into the sum of three components, namely:
+
+`Expected Test Error = Irreducible Noise + (Model Bias)^2 + Model Variance`
+
+This is known as the bias-variance decomposition. 
+
+The first term is the data generating process variance. This term is unavoidable because we live in a noisy world, where even the best ideal model has non-zero error. 
+
+The second term originates from the difficulty to catch the correct functional form of the relationship that links the dependent and independent variables (sometimes it is also called the approximation bias). 
+
+The last term is due to the fact that we estimate our models using only a limited amount of data. Fortunately, this terms gets closer and closer to zero as long as we collect more and more training data. Typically, the more complex (i.e., flexible) we make the model, the lower the bias but the higher the variance. This general phenomenon is known as the bias-variance trade-off, and the challenge is to find a model which provides a good compromise between these two issues.
+
+Clearly, the situation illustrated above is only ideal, because in practice:
+
+- We do not know the true model that generates the data. Our models are typically more or less mis-specified.  
+- We only have a limited amount of data.  
+
+One way to overcome these hurdles and approximate the search for the optimal model is to use the cross-validation approach.
+
 # 5 Determine training and test error using residuals (cleaner code)
 ```{r}
 # mean squared errors for training and test sets
@@ -135,10 +180,34 @@ ggplot(mse_data, aes(x)) +
   labs(y = "Mean Squared Error", x = "degrees of freedom", title="Spline model performance") 
 ```
 
+# Cross-Validation
+We conclude that it is not advisable to compare the predictive accuracy of a set of models using the same observations used for estimating the models. Therefore, for assessing the models' predictive performance, we should use an independent set of data (the test set). Then, the model showing the lowest test error is identified as the best.
+
+Unfortunately, collecting data is typically an expensive activity. An immediate solution is splitting the available into two sets: one for training and the other for testing. The split is random to guarantee that the two sets have the same distribution.
+
+However, this method is often quite noisy. Another solution is to use cross-validation (CV). The basic version is called k-fold cross-validation. The samples are randomly partitioned into k sets (called folds) of roughly equal size. A model is fit using all the samples except the first subset. Then the prediction error of the fitted model is calculated using the first samples. The same operation is repeated for each fold and the model's performance is calculated by averaging the errors across the different test sets.
+
+kis is usually fixed at 5 or 10. Cross-validation provides an estimate of the test error for each model. CV is one of the most widely-used methods for model selection, and for choosing tuning parameter values.
+
+Often a "one-standard error" rule is used with CV. One should choose the most parsimonious model whose error is no more than one standard error above the error of the best model.
+
+The case where k=n corresponds to the so called leave-one-out cross-validation (LOOCV) method. In this case the test set contains a single observation. The advantages of LOOCV are: 1) it doesn’t require random numbers to select the observations to test, meaning that it doesn’t produce different results when applied repeatedly, and 2) it has far less bias than k-fold CV because it employs larger training sets containing n−1 observations each. On the other side, LOOCV presents also some drawbacks: 1) it is potentially quite intense computationally, and 2) due to the fact that any two training sets share n−2 points, the models fit to those training sets tend to be strongly correlated with each other.
+
 # Using caret package to automate cross-validation
+
+There are many R packages that provide functions for performing different flavors of CV. One of the best implementation of these ideas is the caret package by Max Kuhn. The aim of the caret package (acronym of classification and regression training) is to provide a very general and efficient suite of commands for building and assessing predictive models. It allows you to compare the predictive accuracy of many different models (currently more than 200), including the most recent ones from machine learning. The comparison of different models can be done using cross-validation as well as with other approaches. The package also provides many options for data pre-processing. 
+
+To illustrate CV, the data comes from a credit scoring application.
+
+Since credit scoring is a classification problem, the number of misclassified observations will be the loss measure.
+
+The data set contains information about 4,455 individuals for 27 variables. The data set has already been cleaned and pre-processed (i.e. removal of few observations, imputation of missing values and categorization of continuous predictors). The tidy data are contained in the file `CleanCreditScoring.csv`.
 
 # 6 Loading caret package, data
 *THIS WILL TAKE AWHILE TO INSTALL*
+
+The caret package provides functions for splitting the data as well as functions that automatically do a lot of the heavy lifting for us, namely functions that create the resampled data sets, fit the models, and evaluate performance.
+
 ```{r}
 install.packages("DEoptimR")
 if(!require(caret)){install.packages("caret", dependencies = c("Depends", "Suggests")); require(caret)}
@@ -154,6 +223,8 @@ head(cs_data)
 ```
 
 # 7 Splitting the data with `createDataPartition()`
+`createDataPartition()` creates one or more test/training random partitions of the data.
+
 ```{r}
 classes <- cs_data[, "Status"]
 predictors <- cs_data[, -match(c("Status", "Seniority", "Time", "Age", "Expenses", 
@@ -164,6 +235,8 @@ str(train_set)
 ```
 
 #8 Creating training and test sets using `createFolds()`
+`createFolds()` randomly splits the data into k subsets.
+
 ```{r}
 train_predictors <- predictors[train_set, ]
 train_classes <- classes[train_set]
@@ -175,8 +248,16 @@ str(cv_splits)
 ```
 
 # 9 Fitting a models to tune parameters
+To automatically split the data, fit the models and assess the performance, we can use the `train()` function. Here, the `train()` function models the outcome using all the predictors available with a penalized logistic regression.
 
-Be patient. Fitting this many models takes time!
+This model has 2 parameters: 
+
+- `λ`,which controls the strength of a penalty (larger penalty means model is less sensitive to variations in data) 
+- `α` which is a percentage (takes a value between 0 and 1) and varies the penalty between L1 and L2 norms
+
+The `train()` function requires the model formula together with the indication of the model to fit and the grid of tuning parameter values to use. In the code below this grid is specified through the `tuneGrid` argument, while `trControl` provides the method to use for choosing the optimal values of the tuning parameters (in our case, 10-fold cross-validation). Finally, the `preProcess` argument allows to apply a series of pre-processing operations on the predictors (in our case, centering and scaling the predictor values). 
+
+This will take a little while to run because we are fitting so many models...
 ```{r}
 cs_data_train <- cs_data[train_set, ]
 cs_data_test <- cs_data[-train_set, ]
@@ -192,6 +273,8 @@ glmnet_fit <- train(Status ~ ., data = cs_data_train,
 glmnet_fit
 ```
 
+The output shows the accuracy and kappa for each combination of parameters. At the very end of output, you'll see that the optimal values are `alpha = 0`, `lambda = 0.01`.
+
 #10: Visualizing Performance
 ```{r}
 trellis.par.set(caretTheme())
@@ -199,6 +282,8 @@ plot(glmnet_fit, scales = list(x = list(log = 2)))
 ```
 
 #11. Predicting performance
+Now that we have a model with "optimal" parameters, we can make our predictions.
+
 ```{r}
 pred_classes <- predict(glmnet_fit, newdata = cs_data_test)
 table(pred_classes)
