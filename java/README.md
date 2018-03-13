@@ -1,5 +1,6 @@
-# BC CS 211 Projects
-Git repository to store my Bellevue College CS 211 projects.
+# Java Notes
+
+Place to store my Bellevue College CS 211 projects.
 
 ## Notes
 

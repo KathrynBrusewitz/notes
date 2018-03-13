@@ -2,14 +2,4 @@
 
 > Study hard what interests you the most in the most undisciplined, irreverent, and original manner possible. - Richard Feynman
 
-A collection of code and writings on small things I learn day to day. Borrowed this idea from [jbranchaud/til](https://github.com/jbranchaud/til).
-
-[Git Guide](git.md)  
-[Javascript](/weird-js)  
-[INFO 340 - Database (2016)](info-340.md)  
-[INFO 445 - Advanced Database (2017)](info-445.md)  
-[CS 211 - Java (2014)](/cs-211)  
-[PROG 111 - C++ (2013)](/prog-111)  
-[React Testing Example with Jest and Enzyme](/react-testing-example-lockscreen)  
-[Should you store your form state in Redux?](https://goshakkk.name/should-i-put-form-state-into-redux/)
-[INFO 370 - Data Science (2017)](/info-370)  
+A collection of code and writings on small things I learn day to day. Got this idea from [jbranchaud/til](https://github.com/jbranchaud/til).

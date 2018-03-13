@@ -1,0 +1,208 @@
+---
+title: "8-1-2 Using Simulation to Evaluate Model Fitting Methods"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("tibble")
+```
+
+## How to learn about tool behavior, via an example: investigating correlations using simulations
+Beyond simpler calcluations, in data science we often analyze data using modeling, which is just another kind of calculation (a program we run on data and with other inputs). Given data, a model form (like a line, or a spline), and a model fitting program, we can produce parameters for a model and then use that model to make predictions or other calculations. In addition, we can calculate quantities that describe the data (such as a correlation) or that describe models - such as accuracy. 
+
+To understand these tools, today we will learn how to investigate their behavior on simulated data. We will learn about correlation, since you may use it in your project to interpret your model. We will also learn about simulation (generating random data and using it to see what happens), as you may do that in your project to simulate different outcomes from decisions.
+
+Beyond this class, as data scientists we don't just want to use tools blindly - we want to understand how they behave to use them appropriately. Otherwise we may make false inferences or overconfident interpretations, leading to poor decisions based on our data science and poor judgement of our data science skills by other practitioners. Because methods in data science are diverse and evolve, we also want to learn how to learn about tools; we'll learn a template for a program that enables us to do that.
+
+How do we investigate the behavior of any tool? We will write a program that generates a table of data about the behavior of a given tool, then do data analysis on that table. To generate this table, we will simulate data and use it as input to the tool, then store the result in the table. For example, to investigate how well a linear model fitting program works, the table would have these columns:
+
+actual a_1 | actual a_2 | estimate a_1 | estimate a_2 
+
+Greg will go through an example of values here on the white board.
+
+Activity: Answer the following questions
+1) What does a row of data in that table mean?
+2) How might we generate rows of data for that table?
+3) Where does the value for each column come from?
+
+
+Each row represents the tool's behavior on one simulated dataset. We then can simulate many datasets to get many rows, to see the distribution of its behavior.
+
+
+# Implementing this process for correlation in an R program 
+
+The key idea is to make a dataset of 1) the correlation coefficient on some simulated data and 2) factors used to simulate that data. We then do data analysis on that dataset to understand how 2) influences 1). 
+
+We will first just investigate how correlation behaves on data generated/simulated from two random variables with no relationship.
+
+Here's the program template. Afterwards is an actual program. 
+
+1. Define the table you want to analyze 
+2. Do num_datasets times:
+  2.1 Declare factors and sample them from some range or distribution
+  2.2 Use factors to simulate a dataset
+  2.3 Use the simulated dataset as an input to the calculation method
+  2.4 In the table, store the calculation method's result(s) and the factors used to generate the dataset
+3. Analyze the table with plots
+4. Analyze the table with models
+
+
+You'll modify this program below throughout the rest of this activity.
+Greg will walk through this program with you and answer any questions you have about it.
+```{r}
+
+#1. Define a table of size num_datasets
+# tribble is just a convenience function for defining a data table
+# here we're just defining the columns
+table_for_analysis <- tribble(
+   ~ generation_method, ~ noise_type, ~ corr)
+
+num_datasets = 100
+
+#2. Do num_datasets times:
+ for (i in 1:num_datasets){
+    #  2.1 Declare factors and sample them from some range or distribution
+    generation_technique = "uniform_random"
+    
+    #  2.2 Use factors to simulate a dataset
+    dataset_size = 50
+    simulated_dataset = tibble (
+      x = runif(dataset_size, 0, 1),
+      y = runif(dataset_size, 0, 1))
+    
+    #  2.3 Use the simulated dataset as an input to the calculation method
+    correlation <- cor(simulated_dataset$x, simulated_dataset$y)
+    
+    #  2.4 In the table, store the calculation method's result(s) and the factors used to generate the dataset
+    table_for_analysis <- add_row(table_for_analysis,
+      generation_method = generation_technique,
+      corr = correlation )
+}
+  
+#3. Analyze the table with plots
+
+hist(table_for_analysis$corr,
+     xlab='Correlation',ylab='frequency',
+     main='Correlation of 2 Random Uniform Variables (0,1) ')
+
+ggplot(data = table_for_analysis, mapping = aes(x = corr)) +
+  geom_histogram(bins = 20, fill = "purple") +
+  coord_cartesian(xlim = c(-1,1))
+
+
+```
+# Analysis of Simulated Data
+
+We presented the whole program above. Because it takes a long time to run the block with the simulated data, we should separate out the analysis R code so we can better iterate on it as we do exploratory data analysis on the table.
+
+```{r}
+#3. Analyze the table with plots
+
+hist(table_for_analysis$corr,
+     xlab='Correlation',ylab='frequency',
+     main='Correlation of 2 Random Uniform Variables (0,1) ')
+
+ggplot(data = table_for_analysis, mapping = aes(x = corr)) +
+  geom_histogram(bins = 20, fill = "purple") +
+  coord_cartesian(xlim = c(-1,1))
+#4. Analyze the table with models
+
+#5. Do quality checks on steps 1-4
+# will do later
+
+
+```
+# Expanding our analysis by adding more factors
+
+How do we come up with ideas for what factors to include?
+
+1. Look for hard-coded values in the simulation program we have - we could vary those as factors instead
+  1.1 Look at each part and determine the type
+  1.2 Try to think of other values for that type, or a range of values
+  1.3 Change that to be a factor in the simulation
+  
+2.  Read descriptions of the tool by others
+  2.1 see what claims they make, then test those claims
+  2.2 see "problems" they identity or were trying to solve, use the description of those problems to generate data
+  
+3. Look at the implementation of the tool (like its formula)
+  3.1 Replace values in the form to generate data
+  3.2 Think about what effects each of the parts of the implementation
+  
+4. Generate questions freely about how the tool behaves in natural language or with sketches, then try to change the simulation to answer one of those questions.
+
+Activity:
+For the program we already have, make a list of at least 4 ways to add more factors.
+
+# Expanding our investigation of correlation to vary <new factor>
+
+
+
+# Expanding our investigation of correlation to vary <additional new factor>
+
+
+# Expanding our investigation of correlation to include data from lines
+
+The table will look like this:
+intercept of line | slope of line | size of "errors" | size of simulated data | correlation coefficient on simulated data | 
+
+```{r}
+
+#1. Define a table of size num_datasets
+table_for_analysis <- tribble(
+   ~ generation_method,
+   ~ noise_scale, ~noise_center, ~ noise_type,
+   ~ corr)
+
+num_datasets = 1000
+
+#2. Do num_datasets times:
+ for (i in 1:num_datasets){
+    #  2.1 Declare factors and sample them from some range or distribution
+    noise_scale = 1
+    noise_center = .5
+    random_low = noise_center - (noise_scale/2)
+    random_high = noise_center + (noise_scale/2)
+    
+    #  2.2 Use factors to simulate a dataset
+    dataset_size = 50
+    simulated_dataset = tibble (
+      x = runif(dataset_size, random_low, random_high),
+      y = runif(dataset_size, random_low, random_high))
+    
+    #  2.3 Use the simulated dataset as an input to the calculation method
+    correlation <- cor(simulated_dataset$x, simulated_dataset$y)
+    
+    #  2.4 In the table, store the calculation method's result(s) and the factors used to generate the dataset
+    table_for_analysis <- add_row(table_for_analysis,
+      generation_method = "random",
+      noise_scale  = 1,
+      noise_center = .5,
+      noise_type = "random",
+      corr = correlation )
+}
+```  
+
+## Afterwards
+
+
+Here's a process for thinking about how to write the simulation analysis program.
+
+1. Identify the factors that may influence the calculation
+  1.1 Ideate all factors you think may and may not influence it. 
+  1.2 Save this list for adding more factors later
+2. Choose a few factors to add to your investigation
+3. Find a way to (randomly) generate values for factors from some distribution
+4. Use the randomly generated values to generate a simulated dataset.
+5. Use the simulated dataset as an input to the calculation method
+6. Store the calculation method's result(s) and the factors used to generate the dataset
+7. Analyze the table with plots
+8. Analyze the table with models
+9. Do quality checks on steps 1-8
+10. Expand your analysis by going back to step 1 to add more factors
+
+
+Other ways to know a tool's behavior is through mathematical analysis, using equations and logical rules to derive new ones. 
+
+

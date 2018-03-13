@@ -1,5 +1,6 @@
-# BC PROG 111 Projects
-Git repository to store my Bellevue College PROG 111 Projects.
+# C++ Notes
+
+Place to store my Bellevue College PROG 111 Projects.
 
 ## Notes
 
@@ -22,8 +23,9 @@ void bubbleSort(int array[]); // Array degrades to a pointer. What I'm using.
 
 void bubbleSort(int (&array)[8]); // Preserves as a reference. Only accepts arrays of 8 ints.
 ```
+
 So it was an error in syntax. Without the parantheses, the subscript has higher precedence over the & operator and would be passing an array of references:
 
-```c++ 
+```c++
 void bubbleSort(int &array[8]); // Invalid: Passing an array of references
 ```
